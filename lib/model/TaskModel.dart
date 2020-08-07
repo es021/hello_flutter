@@ -1,4 +1,6 @@
+
 class TaskModel {
+
   static final table = "tasks";
   static final col_id = 'id';
   static final col_title = 'title';
@@ -10,7 +12,7 @@ class TaskModel {
   static listSql() {
     var sql = '''
           SELECT * FROM $table 
-          ORDER BY $col_is_checked asc, $col_updated_at desc, $col_id desc
+          ORDER BY $col_is_checked asc, $col_id desc
           ''';
     print(sql);
     return sql;
