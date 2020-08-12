@@ -101,8 +101,8 @@ class DatabaseHelper {
 
   // All of the rows are returned as a list of maps, where each map is
   // a key-value list of columns.
-  void queryAllRows(String table) async {
-    execAndPrint('''SELECT * from $table;''');
+  queryAllRows(String table) async {
+    return execAndReturnLog('''SELECT * from $table;''');
   }
 
   void execAndPrint(sql) async {
@@ -114,12 +114,21 @@ class DatabaseHelper {
     print("-----------------------------------------");
   }
 
-  void listAllTable() async {
-    execAndPrint('''SELECT name FROM sqlite_master 
+  execAndReturnLog(sql) async {
+    Database db = await instance.database;
+    final rows = await db.rawQuery(sql);
+    String toRet = "";
+    toRet += sql + "\n";
+    rows.forEach((row) => {toRet += '$row' + "\n"});
+    return toRet;
+  }
+
+  listAllTable() async {
+    return execAndReturnLog('''SELECT name FROM sqlite_master 
     WHERE type ='table' AND name NOT LIKE 'sqlite_%';''');
   }
 
-  void describeTable(table) async {
-    execAndPrint('''PRAGMA table_info('$table')''');
+  describeTable(table) async {
+    return execAndReturnLog('''PRAGMA table_info('$table')''');
   }
 }

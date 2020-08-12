@@ -37,6 +37,8 @@ class TaskModel {
   String title;
   int desc;
   String is_checked;
+  int created_at;
+  int updated_at;
   // ... more property
 
   TaskModel();
@@ -46,5 +48,7 @@ class TaskModel {
     title = map["title"];
     desc = map["desc"];
     is_checked = map["is_checked"];
+    created_at = map["created_at"];
+    updated_at = map["updated_at"];
   }
 }

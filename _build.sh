@@ -6,5 +6,5 @@ flutter clean
 flutter build appbundle
 
 # kalau nak generate apk jugak : 
-# <app dir>/build/app/outputs/apk/release/app-x86_64-release.apk
+# <app dir>/build/app/outputs/apk/release/app-arm64-v8a-release.apk
 flutter build apk --split-per-abi

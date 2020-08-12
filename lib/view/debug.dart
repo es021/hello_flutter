@@ -12,6 +12,7 @@ class DebugView extends StatefulWidget {
 
 class DebugViewState extends State<DebugView> {
   final dbHelper = DatabaseHelper.instance;
+  String _debugText = "";
 
   Widget buttonDebug(title, onPressed) {
     return RaisedButton(
@@ -60,42 +61,68 @@ class DebugViewState extends State<DebugView> {
     ];
   }
 
+  Widget getDebugTextView() {
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: new Text(_debugText),
+    );
+  }
+
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('MobX Counter'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            buttonDebug("Raw Query", () {
-              _pushScreenWithTextField("Raw Query", (val) {
-                dbHelper.execAndPrint(val);
-              });
-            }),
-            buttonDebug("Describe Table", () {
-              _pushScreenWithTextField("Describe Table", (val) {
-                dbHelper.describeTable(val);
-              });
-            }),
-            buttonDebug("Query All Record", () {
-              _pushScreenWithTextField("Query All Record", (val) {
-                dbHelper.queryAllRows(val);
-              });
-            }),
-            buttonDebug("List All Table", () {
-              dbHelper.listAllTable();
-            }),
-            ...mobxView(),
-            // #################################
-          ],
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      child: new Material(
+        child: new Container(
+          child: new SingleChildScrollView(
+            child: new ConstrainedBox(
+              constraints: new BoxConstraints(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  const Text(
+                    "Debugging Tools",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  buttonDebug("Raw Query", () {
+                    _pushScreenWithTextField("Raw Query", (val) async {
+                      String r = await dbHelper.execAndReturnLog(val);
+                      setState(() {
+                        _debugText = r;
+                      });
+                    });
+                  }),
+                  buttonDebug("Describe Table", () {
+                    _pushScreenWithTextField("Describe Table", (val) async {
+                      String r = await dbHelper.describeTable(val);
+                      setState(() {
+                        _debugText = r;
+                      });
+                    });
+                  }),
+                  buttonDebug("Query All Record", () {
+                    _pushScreenWithTextField("Query All Record", (val) async {
+                      String r = await dbHelper.queryAllRows(val);
+                      setState(() {
+                        _debugText = r;
+                      });
+                    });
+                  }),
+                  buttonDebug("List All Table", () async {
+                    String r = await dbHelper.listAllTable();
+                    setState(() {
+                      _debugText = r;
+                    });
+                  }),
+                  ...mobxView(),
+                  getDebugTextView(),
+                ],
+              ),
+            ),
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: StoreCounter.increment, // 1.Action
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
       ),
     );
   }

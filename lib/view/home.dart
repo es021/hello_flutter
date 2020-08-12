@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hello_flutter/helper/database-helper.dart';
+import 'package:hello_flutter/helper/time-helper.dart';
 
 class HomeView extends StatefulWidget {
   @override
@@ -25,6 +26,37 @@ class HomeViewState extends State<HomeView> {
     );
   }
 
+  // Widget _buildList() {
+  //   return _users.length != 0
+  //       ? RefreshIndicator(
+  //           child: ListView.builder(
+  //               padding: EdgeInsets.all(8),
+  //               itemCount: _users.length,
+  //               itemBuilder: (BuildContext context, int index) {
+  //                 return Card(
+  //                   child: Column(
+  //                     children: <Widget>[
+  //                       ListTile(
+  //                         leading: CircleAvatar(
+  //                             radius: 30,
+  //                             backgroundImage: NetworkImage(
+  //                                 _users[index]['picture']['large'])),
+  //                         title: Text(_name(_users[index])),
+  //                         subtitle: Text(_location(_users[index])),
+  //                         trailing: Text(_age(_users[index])),
+  //                       )
+  //                     ],
+  //                   ),
+  //                 );
+  //               }),
+  //           onRefresh: _getData,
+  //         )
+  //       : Center(child: CircularProgressIndicator());
+  // }
+  Future<void> refreshListAsync() async {
+    refreshList();
+  }
+
   Widget renderList() {
     return Observer(
       builder: (_) => new Expanded(
@@ -33,30 +65,46 @@ class HomeViewState extends State<HomeView> {
           itemBuilder: (BuildContext context, int index) {
             TaskModel task = StoreTask.list[index];
             int id = task.id;
-            String title = task.title;
-            String is_checked = task.is_checked;
+            int createdAtInt = task.created_at;
+            String createdAt = createdAtInt != null
+                ? TimeHelper.getString(createdAtInt)
+                : "Just now";
             // int order = index + 1;
 
             bool isChecked =
                 _taskIsCheckedMap[index] == null // kalau kat program null
-                    ? (is_checked == "1" ? true : false) // amik dari db
+                    ? (task.is_checked == "1" ? true : false) // amik dari db
                     : _taskIsCheckedMap[index];
 
+            var titleStyle = isChecked
+                ? TextStyle(
+                    color: Colors.black.withOpacity(0.4),
+                    decoration: TextDecoration.lineThrough)
+                : TextStyle();
+
+            var title = new Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  new Text(task.title,
+                      style: titleStyle.merge(TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold))),
+                  SizedBox(height: 3),
+                  new Text(createdAt,
+                      style: titleStyle.merge(TextStyle(
+                          fontSize: 11, fontStyle: FontStyle.italic))),
+                ]);
+
             return CheckboxListTile(
-                title: isChecked
-                    ? new Text(
-                        title,
-                        style: TextStyle(
-                            color: Colors.black.withOpacity(0.4),
-                            decoration: TextDecoration.lineThrough),
-                      )
-                    : new Text(title),
-                value: isChecked,
-                onChanged: (bool value) {
-                  updateIsChecked(id, value ? "1" : "0");
-                  setState(() => {_taskIsCheckedMap[index] = value});
-                },
-                secondary: new Text('$id.'));
+              title: title,
+              value: isChecked,
+              onChanged: (bool value) {
+                updateIsChecked(id, value ? "1" : "0");
+                setState(() => {_taskIsCheckedMap[index] = value});
+              },
+              // secondary: new Text('${createdAt}'),
+            );
+            // secondary: new Text('$id.'));
             // return CheckboxListTile(
             //   title: _taskIsCheckedMap[id]
             //       ? new Text(
@@ -179,21 +227,24 @@ class HomeViewState extends State<HomeView> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Observer(
-          builder: (_) =>
-              Text('StoreTask list length:${StoreTask.list.length}'),
-        ),
-        Observer(
-          builder: (_) => Text('StoreCounter:${StoreCounter.value}'),
-        ),
-        buttonDebug("Refresh List", () {
-          refreshList();
-        }),
-        renderList(),
-      ],
+    return RefreshIndicator(
+      onRefresh: refreshListAsync,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          // Observer(
+          //   builder: (_) =>
+          //       Text('StoreTask list length:${StoreTask.list.length}'),
+          // ),
+          // Observer(
+          //   builder: (_) => Text('StoreCounter:${StoreCounter.value}'),
+          // ),
+          // buttonDebug("Refresh List", () {
+          //   refreshList();
+          // }),
+          renderList(),
+        ],
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_flutter/config/app-config.dart';
 // change `flutter_database` to whatever your project name is
 import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/model/UserModel.dart';
@@ -27,7 +28,7 @@ class _MyAppStateWrapper extends State<MyAppWrapper> {
         seconds: 1,
         navigateAfterSeconds: new MyApp(),
         title: new Text(
-          'Is math related to science?',
+          APP_SPLASH_SCREEN,
           style: new TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
         ),
@@ -73,6 +74,12 @@ class ScaffoldViewState extends State<ScaffoldView> {
     'debug': {'index': 2},
   };
 
+  @override
+  void initState() {
+    super.initState();
+    setView(0);
+  }
+
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
@@ -88,6 +95,10 @@ class ScaffoldViewState extends State<ScaffoldView> {
   }
 
   bottomNavOnClick(int index) {
+    return setView(index);
+  }
+
+  setView(int index) {
     var view = null;
     var isPushOnTop = false;
 
@@ -121,12 +132,9 @@ class ScaffoldViewState extends State<ScaffoldView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My First App'),
+        title: const Text(APP_TITLE),
       ),
-      body: Center(
-        // child: _widgetOptions.elementAt(_selectedIndex),
-        child: _currentView,
-      ),
+      body: _currentView,
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -141,10 +149,6 @@ class ScaffoldViewState extends State<ScaffoldView> {
             icon: Icon(Icons.settings),
             title: Text('Debug'),
           ),
-          // BottomNavigationBarItem(
-          //   icon: Icon(Icons.settings),
-          //   title: Text('Debug'),
-          // ),
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.amber[800],
