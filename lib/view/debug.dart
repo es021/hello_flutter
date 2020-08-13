@@ -53,10 +53,10 @@ class DebugViewState extends State<DebugView> {
       // Wrapping in the Observer will automatically re-render on changes to counter.value
       Observer(
           builder: (_) =>
-              buttonDebug('Store Counter: ${StoreCounter.value}', () {
-                StoreCounter.increment();
+              buttonDebug('Store Counter: ${CounterStore.value}', () {
+                CounterStore.increment();
               })
-          // Text('Store Counter: ${StoreCounter.value}'),
+          // Text('Store Counter: ${CounterStore.value}'),
           )
     ];
   }

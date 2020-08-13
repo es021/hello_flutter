@@ -119,7 +119,8 @@ class DatabaseHelper {
     final rows = await db.rawQuery(sql);
     String toRet = "";
     toRet += sql + "\n";
-    rows.forEach((row) => {toRet += '$row' + "\n"});
+    print(sql);
+    rows.forEach((row) => {toRet += '$row' + "\n", print(row)});
     return toRet;
   }
 

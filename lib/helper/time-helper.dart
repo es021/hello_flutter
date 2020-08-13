@@ -3,10 +3,14 @@ import 'package:intl/intl.dart';
 class _TimeHelper {
   String getString(int timestamp) {
     var now = new DateTime.now();
-    var format = new DateFormat('HH:mm a');
-    var date = new DateTime.fromMicrosecondsSinceEpoch(timestamp * 1000);
+    var format = new DateFormat('yyyy-MM-dd   HH:mm:ss a');
+    // print(timestamp);
+    // print(format.format(new DateTime.fromMicrosecondsSinceEpoch((timestamp * 1000).round())));
+    // print(format.format(new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000)));
+    var date = new DateTime.fromMillisecondsSinceEpoch(timestamp * 1000);
     var diff = date.difference(now);
     var time = '';
+    // print(diff);
 
     if (diff.inSeconds <= 0 ||
         diff.inSeconds > 0 && diff.inMinutes == 0 ||

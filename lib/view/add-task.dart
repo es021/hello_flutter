@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hello_flutter/action/TaskAction.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
+import 'package:hello_flutter/store/app.dart';
 import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
@@ -12,24 +14,15 @@ class AddTaskView extends StatefulWidget {
 
 class AddTaskViewState extends State<AddTaskView> {
   var title = "Add a new task";
-  final dbHelper = DatabaseHelper.instance;
-
-  insertTask(val) async {
-    // showNotification("Inserting");
-    Map<String, dynamic> row = {TaskModel.col_title: val};
-    final id = await dbHelper.insert(TaskModel.table, row);
-    row["id"] = id;
-    // showNotification('Successfully added task $val ($id)');
-    return row;
-  }
+  final taskAction = TaskAction.instance;
 
   onSubmitted(val) async {
     print(val);
-    var row = await insertTask(val);
+    var row = await taskAction.insert(val);
     // addTaskToView(row);
     TaskModel t = TaskModel.fromMap(row);
-    StoreTask.addFirst(t);
-    StoreCounter.increment();
+    TaskStore.addFirst(t);
+    CounterStore.increment();
   }
 
   @override
@@ -41,6 +34,8 @@ class AddTaskViewState extends State<AddTaskView> {
         onSubmitted: (val) async {
           onSubmitted(val);
           Navigator.pop(context); // Close the add todo screen
+
+          AppStore.setViewIndex(0);
         },
         decoration: new InputDecoration(
             //hintText: 'Enter new query here',

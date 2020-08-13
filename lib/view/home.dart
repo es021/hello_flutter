@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hello_flutter/action/TaskAction.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
@@ -18,6 +19,7 @@ class HomeViewState extends State<HomeView> {
   // ##############################################################################
   final dbHelper = DatabaseHelper.instance;
   Map _taskIsCheckedMap = {};
+  final taskAction = TaskAction.instance;
 
   Widget buttonDebug(title, onPressed) {
     return RaisedButton(
@@ -61,9 +63,9 @@ class HomeViewState extends State<HomeView> {
     return Observer(
       builder: (_) => new Expanded(
         child: ListView.builder(
-          itemCount: StoreTask.list.length,
+          itemCount: TaskStore.list.length,
           itemBuilder: (BuildContext context, int index) {
-            TaskModel task = StoreTask.list[index];
+            TaskModel task = TaskStore.list[index];
             int id = task.id;
             int createdAtInt = task.created_at;
             String createdAt = createdAtInt != null
@@ -95,7 +97,7 @@ class HomeViewState extends State<HomeView> {
                           fontSize: 11, fontStyle: FontStyle.italic))),
                 ]);
 
-            return CheckboxListTile(
+            var listTile = CheckboxListTile(
               title: title,
               value: isChecked,
               onChanged: (bool value) {
@@ -104,6 +106,23 @@ class HomeViewState extends State<HomeView> {
               },
               // secondary: new Text('${createdAt}'),
             );
+
+            return Dismissible(
+              // Show a red background as the item is swiped away.
+              background: Container(color: Colors.red),
+              key: Key("$id"),
+              onDismissed: (direction) {
+                // setState(() {
+                //   items.removeAt(index);
+                // });
+                // TaskStore.remove(index);
+                taskAction.delete(id);
+                Scaffold.of(context)
+                    .showSnackBar(SnackBar(content: Text("Task removed")));
+              },
+              child: listTile,
+            );
+
             // secondary: new Text('$id.'));
             // return CheckboxListTile(
             //   title: _taskIsCheckedMap[id]
@@ -126,12 +145,12 @@ class HomeViewState extends State<HomeView> {
   }
 
   refreshList() async {
-    StoreTask.emptyList();
+    TaskStore.emptyList();
     var tasks = await dbHelper.queryRaw(TaskModel.listSql());
     setState(() {
       _taskIsCheckedMap = {};
     });
-    tasks.forEach((t) => {StoreTask.addLast(TaskModel.fromMap(t))});
+    tasks.forEach((t) => {TaskStore.addLast(TaskModel.fromMap(t))});
   }
 
   // Button onPressed methods
@@ -178,7 +197,7 @@ class HomeViewState extends State<HomeView> {
   // addTaskToView(Map<String, dynamic> row) {
   //   setState(() {
   //     TaskModel t = TaskModel.fromMap(row);
-  //     StoreTask.list.add(t);
+  //     TaskStore.list.add(t);
   //   });
   // }
 
@@ -234,10 +253,10 @@ class HomeViewState extends State<HomeView> {
         children: <Widget>[
           // Observer(
           //   builder: (_) =>
-          //       Text('StoreTask list length:${StoreTask.list.length}'),
+          //       Text('TaskStore list length:${TaskStore.list.length}'),
           // ),
           // Observer(
-          //   builder: (_) => Text('StoreCounter:${StoreCounter.value}'),
+          //   builder: (_) => Text('CounterStore:${CounterStore.value}'),
           // ),
           // buttonDebug("Refresh List", () {
           //   refreshList();

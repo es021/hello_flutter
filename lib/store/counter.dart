@@ -19,4 +19,4 @@ abstract class _Counter with Store {
 }
 
 
-final StoreCounter = Counter();
+final CounterStore = Counter();

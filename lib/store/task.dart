@@ -17,6 +17,10 @@ abstract class _Task with Store {
     list = ObservableList<TaskModel>();
   }
 
+  void remove(index) {
+    list.removeAt(index);
+  }
+
   void addFirst(t) {
     list.insert(0, t);
   }
@@ -26,4 +30,4 @@ abstract class _Task with Store {
   }
 }
 
-final StoreTask = Task();
+final TaskStore = Task();
