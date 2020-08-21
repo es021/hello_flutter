@@ -27,18 +27,21 @@ class _MyAppStateWrapper extends State<MyAppWrapper> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 1,
+        seconds: 3,
         navigateAfterSeconds: new MyApp(),
         title: new Text(
-          APP_SPLASH_SCREEN,
+          APP_SPLASH_SCREEN_QUOTE,
+          textAlign: TextAlign.center,
           style: new TextStyle(
-              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20.0),
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 20.0,
+          ),
         ),
         // image: new Image.network('https://i.imgur.com/TyCSG9A.png'),
         backgroundColor: Colors.blue,
         styleTextUnderTheLoader: new TextStyle(),
         photoSize: 100.0,
-        // onClick: () => print("Flutter Egypt"),
         loaderColor: Colors.white70);
   }
 }
@@ -52,7 +55,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'SQFlite Demo',
+      title: APP_TITLE,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -68,7 +71,7 @@ class ScaffoldView extends StatefulWidget {
 }
 
 class ScaffoldViewState extends State<ScaffoldView> {
-  var _currentView = null;
+  // var _currentView = null;
   var navi = {
     'home': {'index': 0},
     'add_task': {'index': 1, "is_push_view": true},

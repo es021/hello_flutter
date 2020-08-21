@@ -8,3 +8,6 @@ flutter build appbundle
 # kalau nak generate apk jugak : 
 # <app dir>/build/app/outputs/apk/release/app-arm64-v8a-release.apk
 flutter build apk --split-per-abi
+
+
+cp build/app/outputs/apk/release/app-arm64-v8a-release.apk _deploy.apk

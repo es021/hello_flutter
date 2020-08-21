@@ -44,7 +44,7 @@ module:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/icon/seeds.png"
+  image_path: "assets/icon/icon.png"
 
 
 # For information on the generic Dart part of this file, see the
