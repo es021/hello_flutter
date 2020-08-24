@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:hello_flutter/model/UserModel.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:path/path.dart';
@@ -48,16 +49,11 @@ class DatabaseHelper {
   }
 
   // SQL code to create the database table
-  Future _createTable(Database db, int version) async {
+  Future _createTable(Database db, int version) async { 
+    // @new_entity - create sql
     await db.execute(UserModel.createSql());
     await db.execute(TaskModel.createSql());
-    // await db.execute('''
-    //       CREATE TABLE IF NOT EXISTS $table (
-    //         $columnId INTEGER PRIMARY KEY,
-    //         $columnName TEXT NOT NULL,
-    //         $columnAge INTEGER NOT NULL
-    //       )
-    //       ''');
+    await db.execute(ExpenseModel.createSql());
   }
 
   // Helper methods

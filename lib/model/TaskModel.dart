@@ -1,4 +1,5 @@
 
+// @new_entity - model
 class TaskModel {
 
   static final table = "tasks";

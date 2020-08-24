@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello_flutter/config/app-config.dart';
-// change `flutter_database` to whatever your project name is
-import 'package:hello_flutter/helper/database-helper.dart';
-import 'package:hello_flutter/model/UserModel.dart';
-import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:hello_flutter/store/app.dart';
 import 'package:hello_flutter/view/debug.dart';
+import 'package:hello_flutter/view/expense-add.dart';
+import 'package:hello_flutter/view/expense-list.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
-import './view/home.dart';
-import './view/add-task.dart';
+import 'view/task-list.dart';
+import 'view/task-add.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -70,12 +68,32 @@ class ScaffoldView extends StatefulWidget {
   ScaffoldViewState createState() => ScaffoldViewState();
 }
 
+enum View {
+  TaskList,
+  TaskAdd,
+  ExpenseList,
+  ExpenseAdd,
+  Debug,
+  SelectView,
+  SelectAddView
+}
+
 class ScaffoldViewState extends State<ScaffoldView> {
   // var _currentView = null;
+  BuildContext _context = null;
   var navi = {
-    'home': {'index': 0},
-    'add_task': {'index': 1, "is_push_view": true},
-    'debug': {'index': 2},
+    // in bottom navigation
+    View.TaskList: {'index': 0},
+    View.SelectAddView: {'index': 1},
+    View.SelectView: {'index': 2},
+    // popup
+    View.TaskAdd: {'index': 3},
+    View.ExpenseList: {'index': 4},
+    View.ExpenseAdd: {'index': 5},
+    View.Debug: {'index': 99},
+    // 'task_list': {'index': 0},
+    // 'add_task': {'index': 1, "is_push_view": true},
+    // 'debug': {'index': 2},
   };
 
   @override
@@ -98,57 +116,129 @@ class ScaffoldViewState extends State<ScaffoldView> {
     );
   }
 
-  bottomNavOnClick(int index) {
-    if (index == navi["add_task"]["index"]) {
-      pushView(AddTaskView());
-    } else {
-      AppStore.setViewIndex(index);
-    }
+  Future<View> selectViewPopup(BuildContext context) async {
+    return await showDialog<View>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Go To'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: const Text('To Pay'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.ExpenseList);
+                },
+              ),
+              SimpleDialogOption(
+                child: const Text('Debug'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.Debug);
+                },
+              )
+            ],
+          );
+        });
   }
 
+  Future<View> selectAddViewPopup(BuildContext context) async {
+    return await showDialog<View>(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+            title: const Text('Add What?'),
+            children: <Widget>[
+              SimpleDialogOption(
+                child: const Text('Task'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.TaskAdd);
+                },
+              ),
+              SimpleDialogOption(
+                child: const Text('Expense'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.ExpenseAdd);
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  bottomNavOnClick(int index) async {
+    // ##############################################
+    // SELECT VIEW FROM POPUP
+    // ##############################################
+
+    // select view popup
+    View redirect = null;
+    if (index == navi[View.SelectView]["index"]) {
+      redirect = await selectViewPopup(_context);
+    }
+    if (index == navi[View.SelectAddView]["index"]) {
+      redirect = await selectAddViewPopup(_context);
+    }
+
+    if (redirect != null) {
+      try {
+        bottomNavOnClick(navi[redirect]["index"]);
+      } catch (err) {
+        print(err);
+      }
+      return;
+    }
+
+    // ##############################################
+    // OPEN VIEW POPUP
+    // ##############################################
+
+    // add task popup
+    if (index == navi[View.TaskAdd]["index"]) {
+      pushView(TaskAddView());
+      return;
+    }
+
+    // add expense popup
+    if (index == navi[View.ExpenseAdd]["index"]) {
+      pushView(ExpenseAddView());
+      return;
+    }
+
+    // list expense popup
+    if (index == navi[View.ExpenseList]["index"]) {
+      pushView(ExpenseListView());
+      return;
+    }
+
+    // debug popup
+    if (index == navi[View.Debug]["index"]) {
+      pushView(DebugView());
+      return;
+    }
+
+    // ##############################################
+    // CHANGE MAIN VIEW
+    // ##############################################
+    AppStore.setViewIndex(index);
+  }
+
+  // set view yang ada dlm bottom navigation only
   setView(int index) {
     var view = null;
-    if (index == navi["home"]["index"]) {
-      view = HomeView();
+    if (index == navi[View.TaskList]["index"]) {
+      view = TaskListView();
     }
-    if (index == navi["debug"]["index"]) {
-      view = DebugView();
+
+    if (view == null) {
+      view = new Container(child: Text('View at index $index not found'));
     }
     return view;
   }
 
-  // setView(int index) {
-  //   var view = null;
-  //   var isPushOnTop = false;
-
-  //   if (index == navi["home"]["index"]) {
-  //     view = HomeView();
-  //   }
-
-  //   if (index == navi["debug"]["index"]) {
-  //     view = DebugView();
-  //   }
-
-  //   if (index == navi["add_task"]["index"]) {
-  //     view = AddTaskView();
-  //     isPushOnTop = true;
-  //   }
-
-  //   if (isPushOnTop) {
-  //     // no need to update view
-  //     pushView(view);
-  //     return;
-  //   } else {
-  //     // will update view
-  //     setState(() {
-  //       _currentView = view;
-  //       _selectedIndex = index;
-  //     });
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
+    _context = context;
     return Observer(
       builder: (_) =>
           // buttonDebug('Store Counter: ${CounterStore.value}', () {
@@ -164,16 +254,20 @@ class ScaffoldViewState extends State<ScaffoldView> {
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              title: Text('Home'),
+              icon: Icon(Icons.check_circle),
+              title: Text('To Do'),
             ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.check_circle),
+            //   title: Text('To Pay'),
+            // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
-              title: Text('Add Task'),
+              title: Text('Add'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.settings),
-              title: Text('Debug'),
+              icon: Icon(Icons.storage),
+              title: Text('Other'),
             ),
           ],
           currentIndex: AppStore.viewIndex,

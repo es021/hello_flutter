@@ -1,23 +1,20 @@
-import 'package:hello_flutter/model/TaskModel.dart';
+import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:mobx/mobx.dart';
 
 // Include generated file
-
-
-// @new_entity - store and store.g
-part 'task.g.dart';
+part 'expense.g.dart';
 
 // This is the class used by rest of your codebase
-class Task = _Task with _$Task;
+class Expense = _Expense with _$Expense;
 
 // The store-class
-abstract class _Task with Store {
+abstract class _Expense with Store {
   @observable
-  var list = ObservableList<TaskModel>();
+  var list = ObservableList<ExpenseModel>();
 
   @action
   void emptyList() {
-    list = ObservableList<TaskModel>();
+    list = ObservableList<ExpenseModel>();
   }
 
   void remove(index) {
@@ -33,4 +30,4 @@ abstract class _Task with Store {
   }
 }
 
-final TaskStore = Task();
+final ExpenseStore = Expense();

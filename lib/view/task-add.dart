@@ -7,12 +7,13 @@ import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 
-class AddTaskView extends StatefulWidget {
+// @new_entity - view (add)
+class TaskAddView extends StatefulWidget {
   @override
-  AddTaskViewState createState() => AddTaskViewState();
+  TaskAddViewState createState() => TaskAddViewState();
 }
 
-class AddTaskViewState extends State<AddTaskView> {
+class TaskAddViewState extends State<TaskAddView> {
   var title = "Add a new task";
   final taskAction = TaskAction.instance;
 

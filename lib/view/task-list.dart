@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello_flutter/action/TaskAction.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
-import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/helper/time-helper.dart';
 
-class HomeView extends StatefulWidget {
+
+// @new_entity - view (list)
+class TaskListView extends StatefulWidget {
   @override
-  HomeViewState createState() => HomeViewState();
+  TaskListViewState createState() => TaskListViewState();
 }
 
-class HomeViewState extends State<HomeView> {
+class TaskListViewState extends State<TaskListView> {
   // ##############################################################################
   // variables
   // ##############################################################################
@@ -27,34 +28,6 @@ class HomeViewState extends State<HomeView> {
       onPressed: onPressed,
     );
   }
-
-  // Widget _buildList() {
-  //   return _users.length != 0
-  //       ? RefreshIndicator(
-  //           child: ListView.builder(
-  //               padding: EdgeInsets.all(8),
-  //               itemCount: _users.length,
-  //               itemBuilder: (BuildContext context, int index) {
-  //                 return Card(
-  //                   child: Column(
-  //                     children: <Widget>[
-  //                       ListTile(
-  //                         leading: CircleAvatar(
-  //                             radius: 30,
-  //                             backgroundImage: NetworkImage(
-  //                                 _users[index]['picture']['large'])),
-  //                         title: Text(_name(_users[index])),
-  //                         subtitle: Text(_location(_users[index])),
-  //                         trailing: Text(_age(_users[index])),
-  //                       )
-  //                     ],
-  //                   ),
-  //                 );
-  //               }),
-  //           onRefresh: _getData,
-  //         )
-  //       : Center(child: CircularProgressIndicator());
-  // }
   Future<void> refreshListAsync() async {
     refreshList();
   }
@@ -153,19 +126,6 @@ class HomeViewState extends State<HomeView> {
     tasks.forEach((t) => {TaskStore.addLast(TaskModel.fromMap(t))});
   }
 
-  // Button onPressed methods
-  // _insert(val) async {
-  //   // row to insert
-  //   Map<String, dynamic> row = {UserModel.col_name: val, UserModel.col_age: 23};
-  //   final id = await dbHelper.insert(UserModel.table, row);
-  //   // print('inserted row id: $id');
-  //   row["id"] = id;
-
-  //   // print("row");
-  //   // print(row);
-  //   return row;
-  // }
-
   updateIsChecked(id, is_checked) async {
     // row to update
     print('updating id=$id | is_checked=$is_checked');
@@ -178,28 +138,6 @@ class HomeViewState extends State<HomeView> {
         await dbHelper.update(TaskModel.table, TaskModel.col_id, row);
     print('updated $rowsAffected row(s)');
   }
-
-  // emptyUser() {
-  //   setState(() {
-  //     _taskList = <UserModel>[];5
-  //   });
-  // }
-
-  // void addUser(Map<String, dynamic> row) {
-  //   print("addUser");
-  //   print(row);
-  //   setState(() {
-  //     UserModel u = UserModel.fromMap(row);
-  //     _taskList.add(u);
-  //   });
-  // }
-
-  // addTaskToView(Map<String, dynamic> row) {
-  //   setState(() {
-  //     TaskModel t = TaskModel.fromMap(row);
-  //     TaskStore.list.add(t);
-  //   });
-  // }
 
   void showNotification(String text) {
     return;
@@ -251,16 +189,6 @@ class HomeViewState extends State<HomeView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          // Observer(
-          //   builder: (_) =>
-          //       Text('TaskStore list length:${TaskStore.list.length}'),
-          // ),
-          // Observer(
-          //   builder: (_) => Text('CounterStore:${CounterStore.value}'),
-          // ),
-          // buttonDebug("Refresh List", () {
-          //   refreshList();
-          // }),
           renderList(),
         ],
       ),

@@ -11,6 +11,7 @@ class DebugView extends StatefulWidget {
 }
 
 class DebugViewState extends State<DebugView> {
+  var title = "Debugging Tools";
   final dbHelper = DatabaseHelper.instance;
   String _debugText = "";
 
@@ -69,56 +70,54 @@ class DebugViewState extends State<DebugView> {
   }
 
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-      child: new Material(
-        child: new Container(
-          child: new SingleChildScrollView(
-            child: new ConstrainedBox(
-              constraints: new BoxConstraints(),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  const Text(
-                    "Debugging Tools",
-                    textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  const SizedBox(height: 10),
-                  buttonDebug("Raw Query", () {
-                    _pushScreenWithTextField("Raw Query", (val) async {
-                      String r = await dbHelper.execAndReturnLog(val);
+    return new Scaffold(
+      appBar: new AppBar(title: new Text(title)),
+      body: Container(
+        margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: new Material(
+          child: new Container(
+            child: new SingleChildScrollView(
+              child: new ConstrainedBox(
+                constraints: new BoxConstraints(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    const SizedBox(height: 10),
+                    buttonDebug("Raw Query", () {
+                      _pushScreenWithTextField("Raw Query", (val) async {
+                        String r = await dbHelper.execAndReturnLog(val);
+                        setState(() {
+                          _debugText = r;
+                        });
+                      });
+                    }),
+                    buttonDebug("Describe Table", () {
+                      _pushScreenWithTextField("Describe Table", (val) async {
+                        String r = await dbHelper.describeTable(val);
+                        setState(() {
+                          _debugText = r;
+                        });
+                      });
+                    }),
+                    buttonDebug("Query All Record", () {
+                      _pushScreenWithTextField("Query All Record", (val) async {
+                        String r = await dbHelper.queryAllRows(val);
+                        setState(() {
+                          _debugText = r;
+                        });
+                      });
+                    }),
+                    buttonDebug("List All Table", () async {
+                      String r = await dbHelper.listAllTable();
                       setState(() {
                         _debugText = r;
                       });
-                    });
-                  }),
-                  buttonDebug("Describe Table", () {
-                    _pushScreenWithTextField("Describe Table", (val) async {
-                      String r = await dbHelper.describeTable(val);
-                      setState(() {
-                        _debugText = r;
-                      });
-                    });
-                  }),
-                  buttonDebug("Query All Record", () {
-                    _pushScreenWithTextField("Query All Record", (val) async {
-                      String r = await dbHelper.queryAllRows(val);
-                      setState(() {
-                        _debugText = r;
-                      });
-                    });
-                  }),
-                  buttonDebug("List All Table", () async {
-                    String r = await dbHelper.listAllTable();
-                    setState(() {
-                      _debugText = r;
-                    });
-                  }),
-                  ...mobxView(),
-                  getDebugTextView(),
-                ],
+                    }),
+                    ...mobxView(),
+                    getDebugTextView(),
+                  ],
+                ),
               ),
             ),
           ),
