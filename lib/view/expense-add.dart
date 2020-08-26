@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/action/ExpenseAction.dart';
+import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/helper/form-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/model/ExpenseModel.dart';
@@ -8,72 +9,140 @@ import 'package:hello_flutter/store/expense.dart';
 import 'package:hello_flutter/view/expense-list.dart';
 
 class ExpenseAddView extends StatefulWidget {
+  final int editId;
+  ExpenseAddView({Key key, this.editId = 0}) : super(key: key);
+
   @override
   ExpenseAddViewState createState() => ExpenseAddViewState();
 }
 
 class ExpenseAddViewState extends State<ExpenseAddView> {
-  var _viewTitle = "Add a new expense";
   final _expenseAction = ExpenseAction.instance;
 
-  String _title = "";
-  String _category = "";
-  String _amount = "";
-  TextEditingController _titleController = TextEditingController();
-  TextEditingController _categoryController = TextEditingController();
-  TextEditingController _amountController = TextEditingController();
-  List<String> _categoryDataset = <String>[
+  final List<String> _categoryDataset = <String>[
     ExpenseModel.category_rent,
     ExpenseModel.category_loan,
     ExpenseModel.category_utility
   ];
 
+  String _title;
+  String _amount;
+  String _category;
+  bool _mounted;
+
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _categoryController = TextEditingController();
+  TextEditingController _amountController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _mounted = false;
+    _title = "";
+    _amount = "";
+    _category = _categoryDataset[0];
+  }
+
+  void componentDidMounted(BuildContext context) async {
+    if (_mounted) {
+      return;
+    }
+
+    if (isEdit()) {
+      var editObject = await _expenseAction.single(editId());
+      var title = editObject.title;
+      var amount = '${editObject.amount}';
+      var category = editObject.category;
+
+      FormHelper.setText(_titleController, title);
+      FormHelper.setText(_amountController, amount);
+      setState(() {
+        _title = title;
+        _amount = amount;
+        _category = category;
+        _mounted = true;
+      });
+    }
+  }
+
+  editId() {
+    return widget.editId;
+  }
+
+  isEdit() {
+    return editId() > 0;
+  }
+
   resetForm() {
-    _titleController.text = "";
-    _amountController.text = "";
+    FormHelper.setText(_titleController, "");
+    FormHelper.setText(_amountController, "");
     setState(() {
-      _title = "";
-      _amount = "";
       _category = _categoryDataset[0];
     });
   }
 
-  // insertAndClose() async {
-  //   print("insert");
-  //   print("_title=$_title");
-  //   print("_category=$_category");
-  //   print("_amount=$_amount");
-
-  //   var row = await _expenseAction.insert(_title, _category, _amount);
-  //   ExpenseModel t = ExpenseModel.fromMap(row);
-  //   ExpenseStore.addFirst(t);
-  //   Navigator.pop(context); // Close the add todo screen
-  //   pushView(context, ExpenseListView());
-  // }
+  submit() async {
+    if (isEdit()) {
+      await update();
+      ViewHelper.dialogPostEdit(
+        context: context,
+        body: [Text("Expense successfully edited.")],
+        gotItHandler: (_context) {
+          ViewHelper.dialogClose(_context);
+          ViewHelper.pushView(
+            context: _context,
+            view: ExpenseListView(),
+          );
+        },
+      );
+    } else {
+      await insert();
+      ViewHelper.dialogPostAdd(
+        context: context,
+        body: [Text("New expense successfully added.")],
+        viewHandler: (_context) {
+          ViewHelper.dialogClose(_context);
+          ViewHelper.pushView(
+            context: _context,
+            view: ExpenseListView(),
+          );
+        },
+        addMoreHandler: (_context) {
+          ViewHelper.dialogClose(_context);
+          resetForm();
+        },
+      );
+    }
+  }
 
   insert() async {
-    print("insert");
-    print("_title=$_title");
-    print("_category=$_category");
-    print("_amount=$_amount");
     var row =
         await _expenseAction.insert(_title, _category, double.parse(_amount));
     ExpenseModel t = ExpenseModel.fromMap(row);
     ExpenseStore.addFirst(t);
   }
 
-// push view on top
+  update() async {
+    await _expenseAction.update({
+      ExpenseModel.col_id: editId(),
+      ExpenseModel.col_title: _title,
+      ExpenseModel.col_amount: double.parse(_amount),
+      ExpenseModel.col_category: _category,
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => componentDidMounted(context));
+    var title = isEdit() ? 'Editing Expense #${editId()}' : "Add New Expense";
     return new Scaffold(
-      appBar: new AppBar(title: new Text(_viewTitle)),
+      appBar: new AppBar(title: new Text(title)),
       body: Container(
         padding: new EdgeInsets.all(30.0),
         child: Column(
           children: <Widget>[
             FormHelper.formItem(
-              currentVal: _title,
               controller: _titleController,
               type: "text",
               label: "Title",
@@ -84,7 +153,6 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
               },
             ),
             FormHelper.formItem(
-              currentVal: _amount,
               controller: _amountController,
               type: "number",
               label: "Amount",
@@ -95,7 +163,7 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
               },
             ),
             FormHelper.formItem(
-              currentVal: _category,
+              selectVal: _category,
               controller: _categoryController,
               type: "select",
               label: "Category",
@@ -108,25 +176,9 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
             ),
             FormHelper.formSubmit(
               onPressed: () async => {
-                await insert(),
-                ViewHelper.dialogPostAdd(
-                  context: context,
-                  body: [Text("New expense successfully added.")],
-                  viewHandler: (_context) {
-                    ViewHelper.dialogClose(_context);
-                    ViewHelper.pushView(
-                      context: _context,
-                      view: ExpenseListView(),
-                    );
-                  },
-                  addMoreHandler: (_context) {
-                    ViewHelper.dialogClose(_context);
-                    resetForm();
-                  },
-                ),
+                await submit(),
               },
             ),
-            // DropdownButton(items: ["sad", "asd"], onChanged: null),
           ],
         ),
       ),

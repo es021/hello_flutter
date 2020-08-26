@@ -102,7 +102,7 @@ class DebugViewState extends State<DebugView> {
                     }),
                     buttonDebug("Query All Record", () {
                       _pushScreenWithTextField("Query All Record", (val) async {
-                        String r = await dbHelper.queryAllRows(val);
+                        String r = await dbHelper.debugQueryAllRows(val);
                         setState(() {
                           _debugText = r;
                         });

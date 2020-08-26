@@ -49,7 +49,7 @@ class DatabaseHelper {
   }
 
   // SQL code to create the database table
-  Future _createTable(Database db, int version) async { 
+  Future _createTable(Database db, int version) async {
     // @new_entity - create sql
     await db.execute(UserModel.createSql());
     await db.execute(TaskModel.createSql());
@@ -79,6 +79,20 @@ class DatabaseHelper {
         await db.rawQuery('SELECT COUNT(*) FROM $table'));
   }
 
+  // All of the rows are returned as a list of maps, where each map is
+  // a key-value list of columns.
+  queryAllRows(String table) async {
+    Database db = await instance.database;
+    return await db.rawQuery('''SELECT * from $table;''');
+  }
+
+  queryById(String table, int id) async {
+    String sql = ''' SELECT * FROM $table WHERE id = $id; ''';
+    Database db = await instance.database;
+    var rows = await db.rawQuery(sql);
+    return rows[0];
+  }
+
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
   Future<int> update(
@@ -95,12 +109,6 @@ class DatabaseHelper {
     return await db.delete(table, where: '$colId = ?', whereArgs: [id]);
   }
 
-  // All of the rows are returned as a list of maps, where each map is
-  // a key-value list of columns.
-  queryAllRows(String table) async {
-    return execAndReturnLog('''SELECT * from $table;''');
-  }
-
   void execAndPrint(sql) async {
     Database db = await instance.database;
     final rows = await db.rawQuery(sql);
@@ -108,6 +116,10 @@ class DatabaseHelper {
     print(sql);
     rows.forEach((row) => {print('$row')});
     print("-----------------------------------------");
+  }
+
+  debugQueryAllRows(String table) async {
+    return execAndReturnLog('''SELECT * from $table;''');
   }
 
   execAndReturnLog(sql) async {

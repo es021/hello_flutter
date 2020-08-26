@@ -7,7 +7,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/helper/time-helper.dart';
 
-
 // @new_entity - view (list)
 class TaskListView extends StatefulWidget {
   @override
@@ -28,6 +27,7 @@ class TaskListViewState extends State<TaskListView> {
       onPressed: onPressed,
     );
   }
+
   Future<void> refreshListAsync() async {
     refreshList();
   }

@@ -9,6 +9,24 @@ class ExpenseAction {
   // only have a single app-wide reference to the database
   final dbHelper = DatabaseHelper.instance;
 
+  all() async {
+    var rows = await dbHelper.queryAllRows(ExpenseModel.table);
+    var toRet = [];
+    rows.forEach((r) => {toRet.add(ExpenseModel.fromMap(r))});
+    return toRet;
+  }
+
+  single(id) async {
+    var row = await dbHelper.queryById(ExpenseModel.table, id);
+    return ExpenseModel.fromMap(row);
+  }
+
+  update(row) async {
+    print("update");
+    print(row);
+    return await dbHelper.update(ExpenseModel.table, ExpenseModel.col_id, row);
+  }
+
   insert(String title, String category, double amount) async {
     // showNotification("Inserting");
     Map<String, dynamic> row = {

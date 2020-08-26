@@ -77,6 +77,28 @@ class _ViewHelper {
     );
   }
 
+  Future<void> dialogPostEdit({
+    BuildContext context,
+    List<Widget> body,
+    Function gotItHandler,
+  }) async {
+    return ViewHelper.dialog(
+      context: context,
+      title: "Success",
+      body: body,
+      getAction: (_context) {
+        return [
+          FlatButton(
+            child: Text('Got It!'),
+            onPressed: () {
+              gotItHandler(_context);
+            },
+          ),
+        ];
+      },
+    );
+  }
+
   void snackbar({
     BuildContext context,
     String text,

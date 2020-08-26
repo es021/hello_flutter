@@ -15,28 +15,22 @@ class _FormHelper {
     );
   }
 
+  setText(controller, value) {
+    controller.text = value;
+  }
+
   Widget formItem({
-    dataset,
-    String currentVal = "",
+    List<String> dataset,
+    String selectVal = "",
     TextEditingController controller,
     String label = "",
     String type,
     Function onChanged,
   }) {
     var field;
+
+    // ###### TEXT / NUMBER #############################
     if (type == "text" || type == "number") {
-      // controller.text = currentVal;
-      // controller.selection = TextSelection.fromPosition(
-      //     TextPosition(offset: controller.text.length));
-
-      // int currentOffset = controller.selection.base.offset;
-      // controller.value = TextEditingValue(
-      //   text: currentVal,
-      //   selection: TextSelection.fromPosition(
-      //     TextPosition(offset: currentOffset),
-      //   ),
-      // );
-
       field = TextField(
         onChanged: (val) {
           onChanged(val);
@@ -46,9 +40,14 @@ class _FormHelper {
       );
     }
 
+    // ###### SELECT #############################
     if (type == "select") {
+      if (dataset.indexOf(selectVal) <= -1) {
+        selectVal = "";
+      }
+
       field = DropdownButton<String>(
-        value: currentVal == "" ? dataset[0] : currentVal,
+        value: selectVal == "" ? dataset[0] : selectVal,
         // icon: Icon(Icons.arrow_downward),
         iconSize: 24,
         elevation: 16,

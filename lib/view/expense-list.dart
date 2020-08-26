@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hello_flutter/view/expense-add.dart';
 
 class ExpenseListView extends StatefulWidget {
   @override
@@ -19,7 +20,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
   // ##############################################################################
   // variables
   // ##############################################################################
-  final dbHelper = DatabaseHelper.instance;
+  final DbHelper = DatabaseHelper.instance;
   final _expenseAction = ExpenseAction.instance;
   String title = "My Expenses";
 
@@ -70,7 +71,12 @@ class ExpenseListViewState extends State<ExpenseListView> {
           color: Colors.black26,
           foregroundColor: Colors.black,
           icon: Icons.edit,
-          onTap: () => ViewHelper.snackbar(context: context, text: 'Edit'),
+          onTap: () => {
+            ViewHelper.pushView(
+              context: context,
+              view: ExpenseAddView(editId: d.id),
+            )
+          },
         ),
         IconSlideAction(
           caption: 'Delete',
@@ -103,8 +109,12 @@ class ExpenseListViewState extends State<ExpenseListView> {
 
   refreshList() async {
     ExpenseStore.emptyList();
-    var tasks = await dbHelper.queryRaw(ExpenseModel.listSql());
-    tasks.forEach((t) => {ExpenseStore.addLast(ExpenseModel.fromMap(t))});
+
+    // var rows = await DbHelper.queryAllRows(ExpenseModel.table);
+    // rows.forEach((r) => {ExpenseStore.addLast(ExpenseModel.fromMap(r))});
+
+    var rows = await _expenseAction.all();
+    rows.forEach((r) => {ExpenseStore.addLast(r)});
   }
 
   // updateIsChecked(id, is_checked) async {
@@ -113,10 +123,10 @@ class ExpenseListViewState extends State<ExpenseListView> {
   //   Map<String, dynamic> row = {
   //     ExpenseModel.col_id: id,
   //     ExpenseModel.col_is_checked: is_checked,
-  //     ExpenseModel.col_updated_at: dbHelper.currentTimeInSeconds()
+  //     ExpenseModel.col_updated_at: DbHelper.currentTimeInSeconds()
   //   };
   //   final rowsAffected =
-  //       await dbHelper.update(ExpenseModel.table, ExpenseModel.col_id, row);
+  //       await DbHelper.update(ExpenseModel.table, ExpenseModel.col_id, row);
   //   print('updated $rowsAffected row(s)');
   // }
 
@@ -127,7 +137,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
   insertTask(val) async {
     showNotification("Inserting");
     Map<String, dynamic> row = {ExpenseModel.col_title: val};
-    final id = await dbHelper.insert(ExpenseModel.table, row);
+    final id = await DbHelper.insert(ExpenseModel.table, row);
     row["id"] = id;
     showNotification('Successfully added entity $val ($id)');
     return row;
