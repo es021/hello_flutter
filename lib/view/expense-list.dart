@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:hello_flutter/action/ExpenseAction.dart';
 import 'package:hello_flutter/action/TaskAction.dart';
+import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:hello_flutter/store/expense.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +20,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
   // variables
   // ##############################################################################
   final dbHelper = DatabaseHelper.instance;
-  Map _taskIsCheckedMap = {};
-  final taskAction = TaskAction.instance;
+  final _expenseAction = ExpenseAction.instance;
   String title = "My Expenses";
 
   Widget buttonDebug(title, onPressed) {
@@ -29,16 +30,11 @@ class ExpenseListViewState extends State<ExpenseListView> {
     );
   }
 
-  showSnackBar(BuildContext context, String text) {
-    Scaffold.of(context)
-        .showSnackBar(SnackBar(content: Text(text)));
-  }
-
   Future<void> refreshListAsync() async {
     refreshList();
   }
 
-  Widget getListItem(BuildContext context, ExpenseModel d) {
+  Widget getListItem(BuildContext context, ExpenseModel d, int index) {
     return Slidable(
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
@@ -59,27 +55,33 @@ class ExpenseListViewState extends State<ExpenseListView> {
           caption: 'Archive',
           color: Colors.blue,
           icon: Icons.archive,
-          onTap: () => showSnackBar(context, 'Archive'),
+          onTap: () => ViewHelper.snackbar(context: context, text: 'Archive'),
         ),
         IconSlideAction(
           caption: 'Share',
           color: Colors.indigo,
           icon: Icons.share,
-          onTap: () => showSnackBar(context, 'Share'),
+          onTap: () => ViewHelper.snackbar(context: context, text: 'Share'),
         ),
       ],
       secondaryActions: <Widget>[
         IconSlideAction(
-          caption: 'More',
-          color: Colors.black45,
-          icon: Icons.more_horiz,
-          onTap: () => showSnackBar(context, 'More'),
+          caption: 'Edit',
+          color: Colors.black26,
+          foregroundColor: Colors.black,
+          icon: Icons.edit,
+          onTap: () => ViewHelper.snackbar(context: context, text: 'Edit'),
         ),
         IconSlideAction(
           caption: 'Delete',
           color: Colors.red,
           icon: Icons.delete,
-          onTap: () => showSnackBar(context, 'Delete'),
+          onTap: () => {
+            _expenseAction.delete(d.id),
+            ExpenseStore.remove(index),
+            ViewHelper.snackbar(
+                context: context, text: '\'${d.title}\' removed.'),
+          },
         ),
       ],
     );
@@ -92,57 +94,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
           itemCount: ExpenseStore.list.length,
           itemBuilder: (BuildContext context, int index) {
             ExpenseModel entity = ExpenseStore.list[index];
-            int id = entity.id;
-            int createdAtInt = entity.created_at;
-            String createdAt = createdAtInt != null
-                ? TimeHelper.getString(createdAtInt)
-                : "Just now";
-            // int order = index + 1;
-
-            var titleStyle = TextStyle(
-                color: Colors.black.withOpacity(0.4),
-                decoration: TextDecoration.lineThrough);
-
-            // var title = new Column(
-            //     crossAxisAlignment: CrossAxisAlignment.start,
-            //     mainAxisAlignment: MainAxisAlignment.start,
-            //     children: [
-            //       new Text(entity.title,
-            //           style: titleStyle.merge(TextStyle(
-            //               fontSize: 18, fontWeight: FontWeight.bold))),
-            //       SizedBox(height: 3),
-            //       new Text(createdAt,
-            //           style: titleStyle.merge(TextStyle(
-            //               fontSize: 11, fontStyle: FontStyle.italic))),
-            //     ]);
-
-            return getListItem(context, entity);
-            // todo
-            // var listTile = CheckboxListTile(
-            //   title: title,
-            //   value: false,
-            //   onChanged: (bool value) {
-            //     // updateIsChecked(id, value ? "1" : "0");
-            //     setState(() => {_taskIsCheckedMap[index] = value});
-            //   },
-            //   // secondary: new Text('${createdAt}'),
-            // );
-
-            // return Dismissible(
-            //   // Show a red background as the item is swiped away.
-            //   background: Container(color: Colors.red),
-            //   key: Key("$id"),
-            //   onDismissed: (direction) {
-            //     // setState(() {
-            //     //   items.removeAt(index);
-            //     // });
-            //     // ExpenseStore.remove(index);
-            //     taskAction.delete(id);
-            //     Scaffold.of(context)
-            //         .showSnackBar(SnackBar(content: Text("entity removed")));
-            //   },
-            //   child: listTile,
-            // );
+            return getListItem(context, entity, index);
           },
         ),
       ),
@@ -152,9 +104,6 @@ class ExpenseListViewState extends State<ExpenseListView> {
   refreshList() async {
     ExpenseStore.emptyList();
     var tasks = await dbHelper.queryRaw(ExpenseModel.listSql());
-    setState(() {
-      _taskIsCheckedMap = {};
-    });
     tasks.forEach((t) => {ExpenseStore.addLast(ExpenseModel.fromMap(t))});
   }
 

@@ -25,7 +25,7 @@ class _MyAppStateWrapper extends State<MyAppWrapper> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 3,
+        seconds: APP_SPLASH_SCREEN_TIME_SECOND,
         navigateAfterSeconds: new MyApp(),
         title: new Text(
           APP_SPLASH_SCREEN_QUOTE,
@@ -125,7 +125,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
             title: const Text('Go To'),
             children: <Widget>[
               SimpleDialogOption(
-                child: const Text('To Pay'),
+                child: const Text('My Expenses'),
                 onPressed: () {
                   Navigator.of(context).pop(View.ExpenseList);
                 },
@@ -266,7 +266,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
               title: Text('Add'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.storage),
+              icon: Icon(Icons.more_horiz),
               title: Text('Other'),
             ),
           ],

@@ -9,12 +9,12 @@ class ExpenseAction {
   // only have a single app-wide reference to the database
   final dbHelper = DatabaseHelper.instance;
 
-  insert(val) async {
+  insert(String title, String category, double amount) async {
     // showNotification("Inserting");
     Map<String, dynamic> row = {
-      ExpenseModel.col_title: val,
-      ExpenseModel.col_category: ExpenseModel.category_rent,
-      ExpenseModel.col_amount: 200
+      ExpenseModel.col_title: title,
+      ExpenseModel.col_category: category,
+      ExpenseModel.col_amount: amount
     };
     final id = await dbHelper.insert(ExpenseModel.table, row);
     row["id"] = id;

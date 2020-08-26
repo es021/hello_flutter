@@ -1,6 +1,7 @@
 import 'dart:math';
 
 const APP_TITLE = "Kurtey";
+const APP_SPLASH_SCREEN_TIME_SECOND = 2;
 
 // icon at assets/icon/icon.png
 const quotes = [
