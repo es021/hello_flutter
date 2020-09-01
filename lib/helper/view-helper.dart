@@ -121,13 +121,70 @@ class _ViewHelper {
     );
   }
 
+  Widget loading() {
+    return Center(
+      child: Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          CircularProgressIndicator(),
+          SizedBox(height: 20),
+        ],
+      ),
+    );
+  }
+
+  Widget emptyState({
+    Widget body,
+    String actionText,
+    Function actionHandler,
+  }) {
+    return new Center(
+      child: Column(
+        children: [
+          Icon(Icons.select_all, size: 100),
+          SizedBox(height: 10),
+          Text("Nothing To Show Here", style: TextStyle(fontSize: 20)),
+          SizedBox(height: 30),
+          new RaisedButton(
+            color: Colors.teal[400],
+            textColor: Colors.white,
+            child: Container(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  actionText,
+                  style: TextStyle(fontSize: 25),
+                )),
+            onPressed: actionHandler,
+          )
+        ],
+      ),
+    );
+  }
+
   Widget titleSection({
     String text,
     TextStyle textStyle,
     String subtext,
     TextStyle subtextStyle,
   }) {
+    var textView = Text(
+      text,
+      style: TextStyle(
+        fontSize: 27,
+        fontWeight: FontWeight.bold,
+        color: ColorHelper.GreyText,
+      ),
+    );
 
+    var subtextView = subtext == null
+        ? null
+        : Text(
+            subtext,
+            style: TextStyle(
+              fontSize: 17,
+              color: ColorHelper.GreyText,
+            ).merge(subtextStyle),
+          );
 
     return Container(
       width: double.infinity,
@@ -136,25 +193,8 @@ class _ViewHelper {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // text
-          Text(
-            text,
-            style: TextStyle(
-              fontSize: 27,
-              fontWeight: FontWeight.bold,
-              color: ColorHelper.GreyText,
-            ),
-          ),
-          // subtext
-          subtext == null
-              ? null
-              : Text(
-                  subtext,
-                  style: TextStyle(
-                    fontSize: 17,
-                    color: ColorHelper.GreyText,
-                  ).merge(subtextStyle),
-                ),
+          textView,
+          subtextView,
         ],
       ),
     );

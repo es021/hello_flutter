@@ -38,9 +38,15 @@ class ToPayAction {
     return await dbHelper.update(ToPayModel.table, ToPayModel.col_id, row);
   }
 
-  populateMonthly() async {
-    var month = TimeHelper.currentMonth();
-    var year = TimeHelper.currentYear();
+  populateMonthly({month, year}) async {
+    if (month == null) {
+      month = TimeHelper.currentMonth();
+    }
+
+    if (year == null) {
+      year = TimeHelper.currentYear();
+    }
+
     // print('month=${}');
     // print('year=${TimeHelper.currentYear()}');
     var sql = '''

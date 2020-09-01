@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello_flutter/action/ToPayAction.dart';
 import 'package:hello_flutter/helper/color-helper.dart';
 import 'package:hello_flutter/helper/expense-helper.dart';
@@ -8,9 +7,7 @@ import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/model/ToPayModel.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hello_flutter/store/to_pay.dart';
 
 class ToPayListView extends StatefulWidget {
   @override
@@ -21,7 +18,6 @@ class ToPayListViewState extends State<ToPayListView> {
   // ##############################################################################
   // variables
   // ##############################################################################
-  final DbHelper = DatabaseHelper.instance;
   final _toPayAction = ToPayAction.instance;
   final _initialMonth = TimeHelper.currentMonth();
   final _initialYear = TimeHelper.currentYear();
@@ -31,6 +27,7 @@ class ToPayListViewState extends State<ToPayListView> {
   String title = "To Pay";
   Map _isPaidMap = {};
   final _limitPage = 10;
+  bool _loading = false;
   PageController _pageController;
   Widget buttonDebug(title, onPressed) {
     return RaisedButton(
@@ -53,9 +50,6 @@ class ToPayListViewState extends State<ToPayListView> {
   Widget getListItem(BuildContext context, ToPayModel d, int index) {
     int id = d.id;
     double amount = d.amount;
-
-    // bool isPaid = d.is_paid == "1" ? true : false;
-
     var isPaid = getIsPaid(d, index);
     var titleStyle = isPaid
         ? TextStyle(
@@ -106,18 +100,6 @@ class ToPayListViewState extends State<ToPayListView> {
       actionPane: SlidableDrawerActionPane(),
       actionExtentRatio: 0.25,
       child: listTile,
-      // Container(
-      //   color: Colors.white,
-      //   child: ListTile(
-      //     leading: CircleAvatar(
-      //       backgroundColor: ExpenseHelper.iconColorCategory(d.category),
-      //       child: Icon(ExpenseHelper.iconCategory(d.category)),
-      //       foregroundColor: Colors.white,
-      //     ),
-      //     title: Text(d.title),
-      //     subtitle: Text('RM ${d.amount.toStringAsFixed(2)}'),
-      //   ),
-      // ),
       actions: <Widget>[
         // IconSlideAction(
         //   caption: 'Archive',
@@ -148,18 +130,6 @@ class ToPayListViewState extends State<ToPayListView> {
         )
       ],
     );
-
-    // // return Dismissible(
-    // //   // Show a red background as the item is swiped away.
-    // //   background: Container(color: Colors.red),
-    // //   key: Key("$id"),
-    // //   onDismissed: (direction) {
-    // //     _toPayAction.delete(id);
-    // //     Scaffold.of(context)
-    // //         .showSnackBar(SnackBar(content: Text("Task removed")));
-    // //   },
-    // //   child: listTile,
-    // );
   }
 
   updateIsPaid(id, is_paid) async {
@@ -174,15 +144,26 @@ class ToPayListViewState extends State<ToPayListView> {
   }
 
   Widget renderList(BuildContext context) {
-    return new Expanded(
-      child: ListView.builder(
-        itemCount: _list.length,
-        itemBuilder: (BuildContext context, int index) {
-          ToPayModel entity = _list[index];
-          return getListItem(context, entity, index);
+    if (_list.length == 0) {
+      return ViewHelper.emptyState(
+        actionText: "Generate for ${TimeHelper.getMonthText(_currentMonth)}",
+        actionHandler: () async {
+          await _toPayAction.populateMonthly(
+              month: _currentMonth, year: _currentYear);
+          refreshList();
         },
-      ),
-    );
+      );
+    } else {
+      return new Expanded(
+        child: ListView.builder(
+          itemCount: _list.length,
+          itemBuilder: (BuildContext context, int index) {
+            ToPayModel entity = _list[index];
+            return getListItem(context, entity, index);
+          },
+        ),
+      );
+    }
   }
 
   void emptyList() {
@@ -192,29 +173,28 @@ class ToPayListViewState extends State<ToPayListView> {
     });
   }
 
-  void addLastList(t) {
+  void addFirstList(t) {
     setState(() {
       _list.insert(0, t);
     });
   }
 
-  refreshList() async {
+  void addLastList(t) {
+    setState(() {
+      _list.add(t);
+    });
+  }
+
+  void refreshList() async {
+    setState(() {
+      _loading = true;
+    });
     emptyList();
     var rows = await _toPayAction.query(_currentMonth, _currentYear);
     rows.forEach((r) => {addLastList(r)});
-  }
-
-  void showNotification(String text) {
-    return;
-  }
-
-  insertTask(val) async {
-    showNotification("Inserting");
-    Map<String, dynamic> row = {ToPayModel.col_title: val};
-    final id = await DbHelper.insert(ToPayModel.table, row);
-    row["id"] = id;
-    showNotification('Successfully added entity $val ($id)');
-    return row;
+    setState(() {
+      _loading = false;
+    });
   }
 
   // ##############################################################################
@@ -230,10 +210,11 @@ class ToPayListViewState extends State<ToPayListView> {
   }
 
   getMainView() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+    var body;
+    if (_loading) {
+      body = <Widget>[ViewHelper.loading()];
+    } else {
+      body = <Widget>[
         ViewHelper.titleSection(
           text: '${TimeHelper.getMonthText(_currentMonth)} $_currentYear',
           subtext: 'RM ${getTotalPaid().toStringAsFixed(2)}',
@@ -244,7 +225,13 @@ class ToPayListViewState extends State<ToPayListView> {
           ),
         ),
         renderList(context),
-      ],
+      ];
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: body,
     );
   }
 
@@ -283,7 +270,7 @@ class ToPayListViewState extends State<ToPayListView> {
         setState(() {
           _currentMonth = _initialMonth - pageIndex;
         });
-        print("pageIndex=$pageIndex");
+        // print("pageIndex=$pageIndex");
         refreshList();
       },
       children: getPageChildren(),

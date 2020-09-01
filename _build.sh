@@ -11,3 +11,5 @@ flutter build apk --split-per-abi
 
 
 cp build/app/outputs/apk/release/app-arm64-v8a-release.apk _deploy.apk
+
+./git-save.sh
