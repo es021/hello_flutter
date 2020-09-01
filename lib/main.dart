@@ -5,6 +5,7 @@ import 'package:hello_flutter/store/app.dart';
 import 'package:hello_flutter/view/debug.dart';
 import 'package:hello_flutter/view/expense-add.dart';
 import 'package:hello_flutter/view/expense-list.dart';
+import 'package:hello_flutter/view/to-pay-list.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'view/task-list.dart';
@@ -68,6 +69,7 @@ class ScaffoldView extends StatefulWidget {
   ScaffoldViewState createState() => ScaffoldViewState();
 }
 
+// 0. @new_view - enum
 enum View {
   TaskList,
   TaskAdd,
@@ -75,12 +77,15 @@ enum View {
   ExpenseAdd,
   Debug,
   SelectView,
-  SelectAddView
+  SelectAddView,
+  ToPayList
 }
 
 class ScaffoldViewState extends State<ScaffoldView> {
   // var _currentView = null;
   BuildContext _context = null;
+
+  // 1. @new_view - navi
   var navi = {
     // in bottom navigation
     View.TaskList: {'index': 0},
@@ -90,6 +95,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
     View.TaskAdd: {'index': 3},
     View.ExpenseList: {'index': 4},
     View.ExpenseAdd: {'index': 5},
+    View.ToPayList: {'index': 6},
     View.Debug: {'index': 99},
     // 'task_list': {'index': 0},
     // 'add_task': {'index': 1, "is_push_view": true},
@@ -116,6 +122,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
     );
   }
 
+  // 2a. @new_view - Go To
   Future<View> selectViewPopup(BuildContext context) async {
     return await showDialog<View>(
         context: context,
@@ -124,6 +131,12 @@ class ScaffoldViewState extends State<ScaffoldView> {
           return SimpleDialog(
             title: const Text('Go To'),
             children: <Widget>[
+              SimpleDialogOption(
+                child: const Text('To Pay'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.ToPayList);
+                },
+              ),
               SimpleDialogOption(
                 child: const Text('My Expenses'),
                 onPressed: () {
@@ -141,6 +154,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
         });
   }
 
+  // 2b. @new_view - Add What
   Future<View> selectAddViewPopup(BuildContext context) async {
     return await showDialog<View>(
         context: context,
@@ -166,6 +180,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
         });
   }
 
+  // 3. @new_view - which view to open
   bottomNavOnClick(int index) async {
     // ##############################################
     // SELECT VIEW FROM POPUP
@@ -190,28 +205,27 @@ class ScaffoldViewState extends State<ScaffoldView> {
     }
 
     // ##############################################
-    // OPEN VIEW POPUP
+    // OPEN ADD WHAT POPUP
     // ##############################################
-
-    // add task popup
     if (index == navi[View.TaskAdd]["index"]) {
       pushView(TaskAddView());
       return;
     }
-
-    // add expense popup
     if (index == navi[View.ExpenseAdd]["index"]) {
       pushView(ExpenseAddView());
       return;
     }
-
-    // list expense popup
+    // ##############################################
+    // OPEN GO TO POPUP
+    // ##############################################
     if (index == navi[View.ExpenseList]["index"]) {
       pushView(ExpenseListView());
       return;
     }
-
-    // debug popup
+    if (index == navi[View.ToPayList]["index"]) {
+      pushView(ToPayListView());
+      return;
+    }
     if (index == navi[View.Debug]["index"]) {
       pushView(DebugView());
       return;

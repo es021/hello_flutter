@@ -4,6 +4,8 @@ import 'package:mobx/mobx.dart';
 // Include generated file
 part 'expense.g.dart';
 
+// 4. @new_entity - store and store.g
+
 // This is the class used by rest of your codebase
 class Expense = _Expense with _$Expense;
 

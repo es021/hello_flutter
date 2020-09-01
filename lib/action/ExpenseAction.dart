@@ -1,6 +1,7 @@
 import 'package:hello_flutter/helper/database-helper.dart';
 import 'package:hello_flutter/model/ExpenseModel.dart';
 
+// 2. @new_entity - action
 class ExpenseAction {
   // make this a singleton class
   ExpenseAction._privateConstructor();
@@ -16,31 +17,26 @@ class ExpenseAction {
     return toRet;
   }
 
-  single(id) async {
+  single(int id) async {
     var row = await dbHelper.queryById(ExpenseModel.table, id);
     return ExpenseModel.fromMap(row);
   }
 
-  update(row) async {
-    print("update");
+  update(Map<String, dynamic> row) async {
+    print("[Expense] update");
     print(row);
     return await dbHelper.update(ExpenseModel.table, ExpenseModel.col_id, row);
   }
 
-  insert(String title, String category, double amount) async {
-    // showNotification("Inserting");
-    Map<String, dynamic> row = {
-      ExpenseModel.col_title: title,
-      ExpenseModel.col_category: category,
-      ExpenseModel.col_amount: amount
-    };
+  insert(Map<String, dynamic> row) async {
+    print("[Expense] update");
+    print(row);
     final id = await dbHelper.insert(ExpenseModel.table, row);
     row["id"] = id;
-
     return row;
   }
 
-  delete(id) async {
+  delete(int id) async {
     await dbHelper.delete(ExpenseModel.table, ExpenseModel.col_id, id);
   }
 }

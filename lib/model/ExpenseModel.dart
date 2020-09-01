@@ -1,7 +1,9 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
+// 0. @new_entity - model
 class ExpenseModel {
   static final table = "expenses";
   static final col_id = 'id';
@@ -26,35 +28,7 @@ class ExpenseModel {
     return sql;
   }
 
-  static Color iconColorCategory(String cat) {
-    if (cat == category_rent) {
-      return Colors.blue[300];
-    }
-    if (cat == category_loan) {
-      return Colors.orange[300];
-    }
-    if (cat == category_utility) {
-      return Colors.purple[300];
-    }
-
-    return Colors.grey;
-  }
-
-  static IconData iconCategory(String cat) {
-    if (cat == category_rent) {
-      return Icons.home;
-    }
-    if (cat == category_loan) {
-      return Icons.monetization_on;
-    }
-    if (cat == category_utility) {
-      return Icons.description;
-    }
-
-    return Icons.warning;
-  }
-
-  static createSql() {
+  static createSql(Database db) async {
     var sql = '''
           CREATE TABLE IF NOT EXISTS $table (
             $col_id INTEGER PRIMARY KEY,
@@ -68,7 +42,7 @@ class ExpenseModel {
           )
           ''';
     print(sql);
-    return sql;
+    await db.execute(sql);
   }
 
   int id;

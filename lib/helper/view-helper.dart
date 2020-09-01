@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hello_flutter/helper/color-helper.dart';
 
 class _ViewHelper {
   void pushView({BuildContext context, Widget view}) {
@@ -116,6 +117,45 @@ class _ViewHelper {
             }
           },
         ),
+      ),
+    );
+  }
+
+  Widget titleSection({
+    String text,
+    TextStyle textStyle,
+    String subtext,
+    TextStyle subtextStyle,
+  }) {
+
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // text
+          Text(
+            text,
+            style: TextStyle(
+              fontSize: 27,
+              fontWeight: FontWeight.bold,
+              color: ColorHelper.GreyText,
+            ),
+          ),
+          // subtext
+          subtext == null
+              ? null
+              : Text(
+                  subtext,
+                  style: TextStyle(
+                    fontSize: 17,
+                    color: ColorHelper.GreyText,
+                  ).merge(subtextStyle),
+                ),
+        ],
       ),
     );
   }

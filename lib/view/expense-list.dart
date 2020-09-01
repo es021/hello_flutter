@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello_flutter/action/ExpenseAction.dart';
-import 'package:hello_flutter/action/TaskAction.dart';
+import 'package:hello_flutter/helper/expense-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:hello_flutter/store/expense.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
-import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hello_flutter/view/expense-add.dart';
 
+// 6. @new_entity - view (list)
 class ExpenseListView extends StatefulWidget {
   @override
   ExpenseListViewState createState() => ExpenseListViewState();
@@ -43,8 +43,8 @@ class ExpenseListViewState extends State<ExpenseListView> {
         color: Colors.white,
         child: ListTile(
           leading: CircleAvatar(
-            backgroundColor: ExpenseModel.iconColorCategory(d.category),
-            child: Icon(ExpenseModel.iconCategory(d.category)),
+            backgroundColor: ExpenseHelper.iconColorCategory(d.category),
+            child: Icon(ExpenseHelper.iconCategory(d.category)),
             foregroundColor: Colors.white,
           ),
           title: Text(d.title),

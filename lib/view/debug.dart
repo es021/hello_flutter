@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:hello_flutter/action/ToPayAction.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 
 import 'package:hello_flutter/store/counter.dart';
@@ -11,6 +12,7 @@ class DebugView extends StatefulWidget {
 }
 
 class DebugViewState extends State<DebugView> {
+  final _toPayAction = ToPayAction.instance;
   var title = "Debugging Tools";
   final dbHelper = DatabaseHelper.instance;
   String _debugText = "";
@@ -107,6 +109,9 @@ class DebugViewState extends State<DebugView> {
                           _debugText = r;
                         });
                       });
+                    }),
+                    buttonDebug("Populate To Pay (Current Month)", () {
+                      _toPayAction.populateMonthly();
                     }),
                     buttonDebug("List All Table", () async {
                       String r = await dbHelper.listAllTable();

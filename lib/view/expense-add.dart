@@ -8,6 +8,7 @@ import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:hello_flutter/store/expense.dart';
 import 'package:hello_flutter/view/expense-list.dart';
 
+// 5. @new_entity - view (add)
 class ExpenseAddView extends StatefulWidget {
   final int editId;
   ExpenseAddView({Key key, this.editId = 0}) : super(key: key);
@@ -116,8 +117,12 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
   }
 
   insert() async {
-    var row =
-        await _expenseAction.insert(_title, _category, double.parse(_amount));
+    Map<String, dynamic> data = {
+      ExpenseModel.col_title: _title,
+      ExpenseModel.col_category: _category,
+      ExpenseModel.col_amount: double.parse(_amount),
+    };
+    var row = await _expenseAction.insert(data);
     ExpenseModel t = ExpenseModel.fromMap(row);
     ExpenseStore.addFirst(t);
   }

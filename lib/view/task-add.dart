@@ -7,7 +7,6 @@ import 'package:hello_flutter/store/counter.dart';
 import 'package:hello_flutter/store/task.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
 
-// @new_entity - view (add)
 class TaskAddView extends StatefulWidget {
   @override
   TaskAddViewState createState() => TaskAddViewState();

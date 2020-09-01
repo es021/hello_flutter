@@ -1,7 +1,6 @@
+import 'package:sqflite/sqflite.dart';
 
-// @new_entity - model
 class TaskModel {
-
   static final table = "tasks";
   static final col_id = 'id';
   static final col_title = 'title';
@@ -19,7 +18,7 @@ class TaskModel {
     return sql;
   }
 
-  static createSql() {
+  static createSql(Database db) async {
     var sql = '''
           CREATE TABLE IF NOT EXISTS $table (
             $col_id INTEGER PRIMARY KEY,
@@ -31,7 +30,7 @@ class TaskModel {
           )
           ''';
     print(sql);
-    return sql;
+    await db.execute(sql);
   }
 
   int id;

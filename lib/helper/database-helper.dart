@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:hello_flutter/model/ExpenseModel.dart';
+import 'package:hello_flutter/model/ToPayModel.dart';
 import 'package:hello_flutter/model/UserModel.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:path/path.dart';
@@ -50,10 +51,16 @@ class DatabaseHelper {
 
   // SQL code to create the database table
   Future _createTable(Database db, int version) async {
-    // @new_entity - create sql
-    await db.execute(UserModel.createSql());
-    await db.execute(TaskModel.createSql());
-    await db.execute(ExpenseModel.createSql());
+    // 1. @new_entity - create sql
+    // await db.execute(UserModel.createSql());
+    // await db.execute(TaskModel.createSql());
+    // await db.execute(ExpenseModel.createSql());
+    // await db.execute(ExpenseModel.createSql());
+    // await db.execute(ToPayModel.createSql());
+
+    await TaskModel.createSql(db);
+    await ExpenseModel.createSql(db);
+    await ToPayModel.createSql(db);
   }
 
   // Helper methods
@@ -66,6 +73,10 @@ class DatabaseHelper {
     return await db.insert(table, row);
   }
 
+  // #####################################################################
+  // #####################################################################
+  // #####################################################################
+  // QUERY
   Future<List<Map<String, dynamic>>> queryRaw(String sql) async {
     Database db = await instance.database;
     return await db.rawQuery(sql);
@@ -92,6 +103,11 @@ class DatabaseHelper {
     var rows = await db.rawQuery(sql);
     return rows[0];
   }
+
+  // QUERY
+  // #####################################################################
+  // #####################################################################
+  // #####################################################################
 
   // We are assuming here that the id column in the map is set. The other
   // column values will be used to update the row.
@@ -120,6 +136,11 @@ class DatabaseHelper {
 
   debugQueryAllRows(String table) async {
     return execAndReturnLog('''SELECT * from $table;''');
+  }
+
+  exec(sql) async {
+    Database db = await instance.database;
+    return await db.rawQuery(sql);
   }
 
   execAndReturnLog(sql) async {

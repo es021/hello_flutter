@@ -4,7 +4,6 @@ import 'package:mobx/mobx.dart';
 // Include generated file
 
 
-// @new_entity - store and store.g
 part 'task.g.dart';
 
 // This is the class used by rest of your codebase
