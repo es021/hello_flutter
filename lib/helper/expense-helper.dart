@@ -7,10 +7,19 @@ class _ExpenseHelper {
       return Colors.blue[300];
     }
     if (cat == ExpenseModel.category_loan) {
-      return Colors.orange[300];
+      return Colors.green;
     }
     if (cat == ExpenseModel.category_utility) {
-      return Colors.purple[300];
+      return Colors.orange[300];
+    }
+    if (cat == ExpenseModel.category_insurance) {
+      return Colors.red[600];
+    }
+    if (cat == ExpenseModel.category_baby_necessity) {
+      return Colors.pinkAccent;
+    }
+    if (cat == ExpenseModel.category_transportation) {
+      return Colors.amber;
     }
 
     return Colors.grey;
@@ -24,7 +33,16 @@ class _ExpenseHelper {
       return Icons.monetization_on;
     }
     if (cat == ExpenseModel.category_utility) {
-      return Icons.description;
+      return Icons.receipt;
+    }
+    if (cat == ExpenseModel.category_insurance) {
+      return Icons.local_hospital;
+    }
+    if (cat == ExpenseModel.category_baby_necessity) {
+      return Icons.child_care;
+    }
+    if (cat == ExpenseModel.category_transportation) {
+      return Icons.directions_car;
     }
     return Icons.warning;
   }

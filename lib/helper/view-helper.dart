@@ -162,6 +162,7 @@ class _ViewHelper {
   }
 
   Widget titleSection({
+    Widget trail,
     String text,
     TextStyle textStyle,
     String subtext,
@@ -193,7 +194,10 @@ class _ViewHelper {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          textView,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [textView, trail],
+          ),
           subtextView,
         ],
       ),

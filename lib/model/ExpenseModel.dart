@@ -18,6 +18,18 @@ class ExpenseModel {
   static final category_rent = "rent";
   static final category_loan = "loan";
   static final category_utility = "utility";
+  static final category_insurance = "insurance";
+  static final category_baby_necessity = "baby_necessity";
+  static final category_transportation = "transportation";
+
+  static final allCategory = <String>[
+    category_rent,
+    category_loan,
+    category_utility,
+    category_insurance,
+    category_baby_necessity,
+    category_transportation,
+  ];
 
   static listSql() {
     var sql = '''

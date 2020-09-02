@@ -3,15 +3,23 @@ import 'package:flutter/cupertino.dart';
 
 class _FormHelper {
   Widget formSubmit({onPressed, icon = Icons.add, label: "Submit"}) {
-    return SizedBox(
-      width: double.infinity, // match_parent
-      child: RaisedButton.icon(
-        onPressed: () => {
-          onPressed(),
-        },
-        icon: Icon(icon),
-        label: Text(label),
-      ),
+    return Column(
+      children: [
+        SizedBox(height: 10),
+        SizedBox(
+          width: double.infinity,
+          child: RaisedButton.icon(
+            padding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+            onPressed: () => {
+              onPressed(),
+            },
+            textColor: Colors.white,
+            color: Colors.green,
+            icon: Icon(icon),
+            label: Text(label),
+          ),
+        )
+      ],
     );
   }
 
@@ -26,12 +34,14 @@ class _FormHelper {
     String label = "",
     String type,
     Function onChanged,
+    bool disabled = false
   }) {
     var field;
 
     // ###### TEXT / NUMBER #############################
     if (type == "text" || type == "number") {
       field = TextField(
+        enabled: !disabled,
         onChanged: (val) {
           onChanged(val);
         },

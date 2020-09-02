@@ -10,10 +10,11 @@ class ToPayAction {
   // only have a single app-wide reference to the database
   final dbHelper = DatabaseHelper.instance;
 
-  query(month, year) async {
+  query(month, year, orderBy) async {
+    orderBy = orderBy != null && orderBy != "" ? "order by $orderBy" : "";
     var rows = await dbHelper.queryRaw(''' 
       SELECT * FROM ${ToPayModel.table} WHERE month=$month AND year=$year 
-      order by amount desc
+      $orderBy
     ''');
     var toRet = [];
     rows.forEach((r) => {toRet.add(ToPayModel.fromMap(r))});

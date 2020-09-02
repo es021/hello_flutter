@@ -20,12 +20,8 @@ class ExpenseAddView extends StatefulWidget {
 class ExpenseAddViewState extends State<ExpenseAddView> {
   final _expenseAction = ExpenseAction.instance;
 
-  final List<String> _categoryDataset = <String>[
-    ExpenseModel.category_rent,
-    ExpenseModel.category_loan,
-    ExpenseModel.category_utility
-  ];
-
+  final List<String> _categoryDataset = ExpenseModel.allCategory;
+  
   String _title;
   String _amount;
   String _category;

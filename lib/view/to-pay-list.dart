@@ -5,9 +5,11 @@ import 'package:hello_flutter/helper/color-helper.dart';
 import 'package:hello_flutter/helper/expense-helper.dart';
 import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
+import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:hello_flutter/model/ToPayModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:hello_flutter/view/to-pay-add.dart';
 
 class ToPayListView extends StatefulWidget {
   @override
@@ -23,6 +25,23 @@ class ToPayListViewState extends State<ToPayListView> {
   final _initialYear = TimeHelper.currentYear();
   int _currentMonth = TimeHelper.currentMonth();
   int _currentYear = TimeHelper.currentYear();
+
+  int _orderByCurrentIndex = 0;
+  var _orderByList = [
+    {
+      "label": "Category",
+      "sql": '${ToPayModel.col_category} asc',
+    },
+    {
+      "label": "Paid",
+      "sql": '${ToPayModel.col_is_paid} asc',
+    },
+    {
+      "label": "Amount",
+      "sql": '${ToPayModel.col_amount} desc',
+    }
+  ];
+
   var _list = List<ToPayModel>();
   String title = "To Pay";
   Map _isPaidMap = {};
@@ -50,33 +69,47 @@ class ToPayListViewState extends State<ToPayListView> {
   Widget getListItem(BuildContext context, ToPayModel d, int index) {
     int id = d.id;
     double amount = d.amount;
+    double amount_custom = d.amount_custom;
+    bool hasAmountCustom = amount_custom != null && amount_custom > 0;
     var isPaid = getIsPaid(d, index);
+
+    // create style for text
     var titleStyle = isPaid
+        ? TextStyle(fontSize: 15, color: Colors.grey)
+        : TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: ColorHelper.GreyText,
+          );
+
+    var amountStyle = (hasAmountCustom)
         ? TextStyle(
-            color: Colors.black.withOpacity(0.4),
-            decoration: TextDecoration.lineThrough)
-        : TextStyle();
+            color: Colors.grey,
+            fontSize: 13,
+            fontStyle: FontStyle.italic,
+            decoration: TextDecoration.lineThrough,
+          )
+        : TextStyle(fontSize: 13);
 
     var title = new Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        new Text(
-          d.title,
-          style: titleStyle.merge(
-            TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.bold,
-              color: ColorHelper.GreyText,
-            ),
-          ),
-        ),
+        new Text(d.title, style: titleStyle),
         SizedBox(height: 3),
-        new Text(
-          'RM ${amount.toStringAsFixed(2)}',
-          style: titleStyle.merge(
-            TextStyle(fontSize: 13),
-          ),
+        Row(
+          children: [
+            Text(
+              'RM ${amount.toStringAsFixed(2)}',
+              style: titleStyle.merge(amountStyle),
+            ),
+            hasAmountCustom
+                ? Text(
+                    ' | RM ${amount_custom.toStringAsFixed(2)}',
+                    style: titleStyle.merge(TextStyle(fontSize: 13)),
+                  )
+                : Text(""),
+          ],
         ),
       ],
     );
@@ -89,8 +122,9 @@ class ToPayListViewState extends State<ToPayListView> {
         setState(() => {_isPaidMap[index] = value});
       },
       secondary: CircleAvatar(
-        backgroundColor:
-            isPaid ? Colors.grey : ExpenseHelper.iconColorCategory(d.category),
+        backgroundColor: isPaid
+            ? Colors.grey[400]
+            : ExpenseHelper.iconColorCategory(d.category),
         child: Icon(ExpenseHelper.iconCategory(d.category)),
         foregroundColor: Colors.white,
       ),
@@ -121,11 +155,11 @@ class ToPayListViewState extends State<ToPayListView> {
           foregroundColor: Colors.black,
           icon: Icons.edit,
           onTap: () => {
-            ViewHelper.snackbar(context: context, text: "Edit Amount")
-            // ViewHelper.pushView(
-            //   context: context,
-            //   view: ExpenseAddView(editId: d.id),
-            // )
+            // ViewHelper.snackbar(context: context, text: "Edit Amount")
+            ViewHelper.pushView(
+              context: context,
+              view: ToPayAddView(editId: d.id),
+            )
           },
         )
       ],
@@ -145,13 +179,16 @@ class ToPayListViewState extends State<ToPayListView> {
 
   Widget renderList(BuildContext context) {
     if (_list.length == 0) {
-      return ViewHelper.emptyState(
-        actionText: "Generate for ${TimeHelper.getMonthText(_currentMonth)}",
-        actionHandler: () async {
-          await _toPayAction.populateMonthly(
-              month: _currentMonth, year: _currentYear);
-          refreshList();
-        },
+      return Expanded(
+        flex: 3,
+        child: ViewHelper.emptyState(
+          actionText: "Generate for ${TimeHelper.getMonthText(_currentMonth)}",
+          actionHandler: () async {
+            await _toPayAction.populateMonthly(
+                month: _currentMonth, year: _currentYear);
+            refreshList();
+          },
+        ),
       );
     } else {
       return new Expanded(
@@ -185,12 +222,19 @@ class ToPayListViewState extends State<ToPayListView> {
     });
   }
 
+  getOrderBy() {
+    var orderByObj = _orderByList[_orderByCurrentIndex];
+    return orderByObj;
+  }
+
   void refreshList() async {
     setState(() {
       _loading = true;
     });
     emptyList();
-    var rows = await _toPayAction.query(_currentMonth, _currentYear);
+
+    var rows = await _toPayAction.query(
+        _currentMonth, _currentYear, getOrderBy()["sql"]);
     rows.forEach((r) => {addLastList(r)});
     setState(() {
       _loading = false;
@@ -214,8 +258,34 @@ class ToPayListViewState extends State<ToPayListView> {
     if (_loading) {
       body = <Widget>[ViewHelper.loading()];
     } else {
+      var orderButton = FlatButton(
+        onPressed: () {
+          setState(() {
+            _orderByCurrentIndex = _orderByCurrentIndex + 1;
+            if (_orderByCurrentIndex >= _orderByList.length) {
+              _orderByCurrentIndex = 0;
+            }
+          });
+          refreshList();
+        },
+        child: Row(
+          children: [
+            Icon(
+              Icons.filter_list,
+              color: Colors.grey,
+            ),
+            SizedBox(width: 10),
+            Text(
+              '${getOrderBy()["label"]}',
+              style: TextStyle(color: ColorHelper.GreyText),
+            )
+          ],
+        ),
+      );
+
       body = <Widget>[
         ViewHelper.titleSection(
+          trail: orderButton,
           text: '${TimeHelper.getMonthText(_currentMonth)} $_currentYear',
           subtext: 'RM ${getTotalPaid().toStringAsFixed(2)}',
           subtextStyle: TextStyle(
@@ -225,6 +295,20 @@ class ToPayListViewState extends State<ToPayListView> {
           ),
         ),
         renderList(context),
+        SizedBox(
+          height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Icon(Icons.arrow_left),
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  child: Text("Swipe here to change month")),
+              Icon(Icons.arrow_right),
+            ],
+          ),
+        )
       ];
     }
 

@@ -5,6 +5,7 @@ import 'package:hello_flutter/store/app.dart';
 import 'package:hello_flutter/view/debug.dart';
 import 'package:hello_flutter/view/expense-add.dart';
 import 'package:hello_flutter/view/expense-list.dart';
+import 'package:hello_flutter/view/to-pay-add.dart';
 import 'package:hello_flutter/view/to-pay-list.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
@@ -78,7 +79,8 @@ enum View {
   Debug,
   SelectView,
   SelectAddView,
-  ToPayList
+  ToPayList,
+  ToPayAdd
 }
 
 class ScaffoldViewState extends State<ScaffoldView> {
@@ -96,6 +98,9 @@ class ScaffoldViewState extends State<ScaffoldView> {
     View.ExpenseList: {'index': 4},
     View.ExpenseAdd: {'index': 5},
     View.ToPayList: {'index': 6},
+    View.ToPayAdd: {'index': 7},
+
+    // ##########################
     View.Debug: {'index': 99},
     // 'task_list': {'index': 0},
     // 'add_task': {'index': 1, "is_push_view": true},
@@ -174,6 +179,12 @@ class ScaffoldViewState extends State<ScaffoldView> {
                 onPressed: () {
                   Navigator.of(context).pop(View.ExpenseAdd);
                 },
+              ),
+              SimpleDialogOption(
+                child: const Text('To Pay'),
+                onPressed: () {
+                  Navigator.of(context).pop(View.ToPayAdd);
+                },
               )
             ],
           );
@@ -213,6 +224,10 @@ class ScaffoldViewState extends State<ScaffoldView> {
     }
     if (index == navi[View.ExpenseAdd]["index"]) {
       pushView(ExpenseAddView());
+      return;
+    }
+    if (index == navi[View.ToPayAdd]["index"]) {
+      pushView(ToPayAddView());
       return;
     }
     // ##############################################
