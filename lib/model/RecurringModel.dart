@@ -15,6 +15,8 @@ class RecurringModel {
   static final col_created_at = 'created_at';
   static final col_updated_at = 'updated_at';
 
+
+
   static listSql() {
     var sql = '''
           SELECT * FROM $table 

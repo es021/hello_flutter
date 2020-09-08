@@ -1,6 +1,7 @@
 import 'dart:math';
 
-const APP_TITLE = "Kurtey";
+
+const APP_TITLE = "Life Tracker";
 const APP_SPLASH_SCREEN_TIME_SECOND = 1;
 
 // icon at assets/icon/icon.png
