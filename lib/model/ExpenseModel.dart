@@ -3,73 +3,66 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
-// 0. @new_entity - model
 class ExpenseModel {
-  static final table = "expenses";
+  static final table = "expense";
   static final col_id = 'id';
   static final col_title = 'title';
   static final col_category = 'category';
   static final col_amount = 'amount';
-  static final col_is_monthly = 'is_monthly';
-  static final col_is_yearly = 'is_yearly';
+  static final col_amount_custom = 'amount_custom';
+  static final col_is_paid = 'is_paid';
+  static final col_month = 'month';
+  static final col_year = 'year';
   static final col_created_at = 'created_at';
   static final col_updated_at = 'updated_at';
-
-  static final category_rent = "rent";
-  static final category_loan = "loan";
-  static final category_utility = "utility";
-  static final category_insurance = "insurance";
-  static final category_baby_necessity = "baby_necessity";
-  static final category_transportation = "transportation";
-  static final category_saving = "saving";
-  static final category_gift = "gift";
-
-  static final allCategory = <String>[
-    category_rent,
-    category_loan,
-    category_utility,
-    category_insurance,
-    category_baby_necessity,
-    category_transportation,
-    category_saving,
-    category_gift,
-  ];
 
   static listSql() {
     var sql = '''
           SELECT * FROM $table 
-          ORDER BY $col_amount desc
+          ORDER BY $col_year desc, $col_month desc
           ''';
     print(sql);
     return sql;
   }
 
   static createSql(Database db) async {
-    var sql = '''
+    var createSql = '''
           CREATE TABLE IF NOT EXISTS $table (
             $col_id INTEGER PRIMARY KEY,
             $col_title TEXT NOT NULL,
             $col_category TEXT,
             $col_amount FLOAT NOT NULL,
-            $col_is_monthly CHAR(1) NOT NULL DEFAULT '0',
-            $col_is_yearly CHAR(1) NOT NULL DEFAULT '0',
+            $col_amount_custom FLOAT,
+            $col_is_paid CHAR(1) NOT NULL DEFAULT '0',
+            $col_month INTEGER NOT NULL,
+            $col_year INTEGER NOT NULL,
             $col_created_at INTEGER DEFAULT (cast(strftime('%s','now') as int)),
             $col_updated_at INTEGER
           )
           ''';
-    print(sql);
-    await db.execute(sql);
+    await db.execute(createSql);
+
+    await db.execute('''
+      CREATE UNIQUE INDEX IF NOT EXISTS ${table}_composite_index 
+      ON $table ($col_title, $col_category, $col_month, $col_year)
+    ''');
+
+    // the old expenses already renamed to recurring
+    await db.execute('''
+      DROP table expenses
+    ''');
   }
 
   int id;
   String title;
   String category;
   double amount;
-  String is_monthly;
-  String is_yearly;
+  double amount_custom;
+  String is_paid;
+  int month;
+  int year;
   int created_at;
   int updated_at;
-  // ... more property
 
   ExpenseModel();
 
@@ -78,8 +71,10 @@ class ExpenseModel {
     title = map["title"];
     category = map["category"];
     amount = map["amount"];
-    is_monthly = map["is_monthly"];
-    is_yearly = map["is_yearly"];
+    amount_custom = map["amount_custom"];
+    is_paid = map["is_paid"];
+    month = map["month"];
+    year = map["year"];
     created_at = map["created_at"];
     updated_at = map["updated_at"];
   }

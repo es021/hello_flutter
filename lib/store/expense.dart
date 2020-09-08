@@ -1,10 +1,10 @@
 import 'package:hello_flutter/model/ExpenseModel.dart';
+import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:mobx/mobx.dart';
 
 // Include generated file
-part 'expense.g.dart';
 
-// 4. @new_entity - store and store.g
+part 'expense.g.dart';
 
 // This is the class used by rest of your codebase
 class Expense = _Expense with _$Expense;
@@ -13,6 +13,8 @@ class Expense = _Expense with _$Expense;
 abstract class _Expense with Store {
   @observable
   var list = ObservableList<ExpenseModel>();
+  int currentMonth = TimeHelper.currentMonth();
+  int currentYear = TimeHelper.currentYear();
 
   @action
   void emptyList() {

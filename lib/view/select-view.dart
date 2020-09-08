@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/color-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/view/debug.dart';
-import 'to-pay-list.dart';
 import 'expense-list.dart';
+import 'recurring-list.dart';
 
 class SelectView extends StatefulWidget {
   final BuildContext parentContext;
@@ -18,14 +18,14 @@ class SelectViewState extends State<SelectView> {
   final _title = "Open View";
   final _menu = [
     {
-      "label": "To Pay",
-      "view": ToPayListView(),
+      "label": "My Expenses",
+      "view": ExpenseListView(),
       "icon": Icons.monetization_on,
       "iconColor": Colors.red
     },
     {
-      "label": "Expense",
-      "view": ExpenseListView(),
+      "label": "Recurring Payment",
+      "view": RecurringListView(),
       "icon": Icons.library_books,
       "iconColor": Colors.green
     },

@@ -145,6 +145,7 @@ class _ViewHelper {
     return new Center(
       child: Column(
         children: [
+          SizedBox(height: 20),
           Icon(Icons.select_all, size: 100),
           SizedBox(height: 10),
           Text("Nothing To Show Here", style: TextStyle(fontSize: 20)),

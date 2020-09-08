@@ -1,48 +1,81 @@
 import 'package:flutter/material.dart';
-import 'package:hello_flutter/model/ExpenseModel.dart';
 
 class _ExpenseHelper {
+  final category_rent = "rent";
+  final category_loan = "loan";
+  final category_utility = "utility";
+  final category_insurance = "insurance";
+  final category_baby_necessity = "baby_necessity";
+  final category_transportation = "transportation";
+  final category_saving = "saving";
+  final category_gift = "gift";
+
+  getAllCategory() {
+    return <String>[
+      category_rent,
+      category_loan,
+      category_utility,
+      category_insurance,
+      category_baby_necessity,
+      category_transportation,
+      category_saving,
+      category_gift,
+    ];
+  }
+
   Color iconColorCategory(String cat) {
-    if (cat == ExpenseModel.category_rent) {
+    if (cat == this.category_rent) {
       return Colors.blue[300];
     }
-    if (cat == ExpenseModel.category_loan) {
+    if (cat == this.category_loan) {
       return Colors.green;
     }
-    if (cat == ExpenseModel.category_utility) {
+    if (cat == this.category_utility) {
       return Colors.orange[300];
     }
-    if (cat == ExpenseModel.category_insurance) {
+    if (cat == this.category_insurance) {
       return Colors.red[600];
     }
-    if (cat == ExpenseModel.category_baby_necessity) {
+    if (cat == this.category_baby_necessity) {
       return Colors.pinkAccent;
     }
-    if (cat == ExpenseModel.category_transportation) {
+    if (cat == this.category_transportation) {
       return Colors.amber;
+    }
+    if (cat == this.category_saving) {
+      return Colors.green;
+    }
+    if (cat == this.category_gift) {
+      return Colors.pink;
     }
 
     return Colors.grey;
   }
 
   IconData iconCategory(String cat) {
-    if (cat == ExpenseModel.category_rent) {
+    if (cat == this.category_rent) {
       return Icons.home;
     }
-    if (cat == ExpenseModel.category_loan) {
+    if (cat == this.category_loan) {
       return Icons.monetization_on;
     }
-    if (cat == ExpenseModel.category_utility) {
+    if (cat == this.category_utility) {
       return Icons.receipt;
     }
-    if (cat == ExpenseModel.category_insurance) {
+    if (cat == this.category_insurance) {
       return Icons.local_hospital;
     }
-    if (cat == ExpenseModel.category_baby_necessity) {
+    if (cat == this.category_baby_necessity) {
       return Icons.child_care;
     }
-    if (cat == ExpenseModel.category_transportation) {
+    if (cat == this.category_transportation) {
       return Icons.directions_car;
+    }
+    if (cat == this.category_saving) {
+      return Icons.attach_money;
+    }
+    if (cat == this.category_gift) {
+      return Icons.card_giftcard;
     }
     return Icons.warning;
   }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
+import 'package:hello_flutter/model/RecurringModel.dart';
 import 'package:hello_flutter/model/ExpenseModel.dart';
-import 'package:hello_flutter/model/ToPayModel.dart';
 import 'package:hello_flutter/model/UserModel.dart';
 import 'package:hello_flutter/model/TaskModel.dart';
 import 'package:path/path.dart';
@@ -54,13 +54,13 @@ class DatabaseHelper {
     // 1. @new_entity - create sql
     // await db.execute(UserModel.createSql());
     // await db.execute(TaskModel.createSql());
+    // await db.execute(RecurringModel.createSql());
+    // await db.execute(RecurringModel.createSql());
     // await db.execute(ExpenseModel.createSql());
-    // await db.execute(ExpenseModel.createSql());
-    // await db.execute(ToPayModel.createSql());
 
     await TaskModel.createSql(db);
+    await RecurringModel.createSql(db);
     await ExpenseModel.createSql(db);
-    await ToPayModel.createSql(db);
   }
 
   // Helper methods

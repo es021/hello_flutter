@@ -10,10 +10,10 @@ import 'view/task-list.dart';
 
 // import 'view/task-add.dart';
 // import 'package:hello_flutter/view/debug.dart';
+// import 'package:hello_flutter/view/recurring-add.dart';
+// import 'package:hello_flutter/view/recurring-list.dart';
 // import 'package:hello_flutter/view/expense-add.dart';
 // import 'package:hello_flutter/view/expense-list.dart';
-// import 'package:hello_flutter/view/to-pay-add.dart';
-// import 'package:hello_flutter/view/to-pay-list.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -77,13 +77,13 @@ class ScaffoldView extends StatefulWidget {
 enum View {
   TaskList,
   TaskAdd,
-  ExpenseList,
-  ExpenseAdd,
+  RecurringList,
+  RecurringAdd,
   Debug,
   SelectView,
   SelectAddView,
-  ToPayList,
-  ToPayAdd
+  ExpenseList,
+  ExpenseAdd
 }
 
 class ScaffoldViewState extends State<ScaffoldView> {
@@ -98,10 +98,10 @@ class ScaffoldViewState extends State<ScaffoldView> {
     View.SelectView: {'index': 2},
     // popup
     View.TaskAdd: {'index': 3},
-    View.ExpenseList: {'index': 4},
-    View.ExpenseAdd: {'index': 5},
-    View.ToPayList: {'index': 6},
-    View.ToPayAdd: {'index': 7},
+    View.RecurringList: {'index': 4},
+    View.RecurringAdd: {'index': 5},
+    View.ExpenseList: {'index': 6},
+    View.ExpenseAdd: {'index': 7},
 
     // ##########################
     View.Debug: {'index': 99},
@@ -140,15 +140,15 @@ class ScaffoldViewState extends State<ScaffoldView> {
   //           title: const Text('Go To'),
   //           children: <Widget>[
   //             SimpleDialogOption(
-  //               child: const Text('To Pay'),
+  //               child: const Text('Expense'),
   //               onPressed: () {
-  //                 Navigator.of(context).pop(View.ToPayList);
+  //                 Navigator.of(context).pop(View.ExpenseList);
   //               },
   //             ),
   //             SimpleDialogOption(
-  //               child: const Text('My Expenses'),
+  //               child: const Text('My Recurrings'),
   //               onPressed: () {
-  //                 Navigator.of(context).pop(View.ExpenseList);
+  //                 Navigator.of(context).pop(View.RecurringList);
   //               },
   //             ),
   //             SimpleDialogOption(
@@ -178,15 +178,15 @@ class ScaffoldViewState extends State<ScaffoldView> {
   //               },
   //             ),
   //             SimpleDialogOption(
-  //               child: const Text('Expense'),
+  //               child: const Text('Recurring'),
   //               onPressed: () {
-  //                 Navigator.of(context).pop(View.ExpenseAdd);
+  //                 Navigator.of(context).pop(View.RecurringAdd);
   //               },
   //             ),
   //             SimpleDialogOption(
-  //               child: const Text('To Pay'),
+  //               child: const Text('Expense'),
   //               onPressed: () {
-  //                 Navigator.of(context).pop(View.ToPayAdd);
+  //                 Navigator.of(context).pop(View.ExpenseAdd);
   //               },
   //             )
   //           ],
@@ -225,23 +225,23 @@ class ScaffoldViewState extends State<ScaffoldView> {
     //   pushView(TaskAddView());
     //   return;
     // }
-    // if (index == navi[View.ExpenseAdd]["index"]) {
-    //   pushView(ExpenseAddView());
+    // if (index == navi[View.RecurringAdd]["index"]) {
+    //   pushView(RecurringAddView());
     //   return;
     // }
-    // if (index == navi[View.ToPayAdd]["index"]) {
-    //   pushView(ToPayAddView());
+    // if (index == navi[View.ExpenseAdd]["index"]) {
+    //   pushView(ExpenseAddView());
     //   return;
     // }
     // // ##############################################
     // // OPEN GO TO POPUP
     // // ##############################################
-    // if (index == navi[View.ExpenseList]["index"]) {
-    //   pushView(ExpenseListView());
+    // if (index == navi[View.RecurringList]["index"]) {
+    //   pushView(RecurringListView());
     //   return;
     // }
-    // if (index == navi[View.ToPayList]["index"]) {
-    //   pushView(ToPayListView());
+    // if (index == navi[View.ExpenseList]["index"]) {
+    //   pushView(ExpenseListView());
     //   return;
     // }
     // if (index == navi[View.Debug]["index"]) {
@@ -297,7 +297,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
             ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.check_circle),
-            //   title: Text('To Pay'),
+            //   title: Text('Expense'),
             // ),
             BottomNavigationBarItem(
               icon: Icon(Icons.add),
