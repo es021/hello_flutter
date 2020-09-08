@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:hello_flutter/config/app-config.dart';
 import 'package:hello_flutter/store/app.dart';
-import 'package:hello_flutter/view/debug.dart';
-import 'package:hello_flutter/view/expense-add.dart';
-import 'package:hello_flutter/view/expense-list.dart';
-import 'package:hello_flutter/view/to-pay-add.dart';
-import 'package:hello_flutter/view/to-pay-list.dart';
+import 'package:hello_flutter/view/select-add-view.dart';
+import 'package:hello_flutter/view/select-view.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'view/task-list.dart';
-import 'view/task-add.dart';
+
+// import 'view/task-add.dart';
+// import 'package:hello_flutter/view/debug.dart';
+// import 'package:hello_flutter/view/expense-add.dart';
+// import 'package:hello_flutter/view/expense-list.dart';
+// import 'package:hello_flutter/view/to-pay-add.dart';
+// import 'package:hello_flutter/view/to-pay-list.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -128,68 +131,68 @@ class ScaffoldViewState extends State<ScaffoldView> {
   }
 
   // 2a. @new_view - Go To
-  Future<View> selectViewPopup(BuildContext context) async {
-    return await showDialog<View>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text('Go To'),
-            children: <Widget>[
-              SimpleDialogOption(
-                child: const Text('To Pay'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.ToPayList);
-                },
-              ),
-              SimpleDialogOption(
-                child: const Text('My Expenses'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.ExpenseList);
-                },
-              ),
-              SimpleDialogOption(
-                child: const Text('Debug'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.Debug);
-                },
-              )
-            ],
-          );
-        });
-  }
+  // Future<View> selectViewPopup(BuildContext context) async {
+  //   return await showDialog<View>(
+  //       context: context,
+  //       barrierDismissible: true,
+  //       builder: (BuildContext context) {
+  //         return SimpleDialog(
+  //           title: const Text('Go To'),
+  //           children: <Widget>[
+  //             SimpleDialogOption(
+  //               child: const Text('To Pay'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.ToPayList);
+  //               },
+  //             ),
+  //             SimpleDialogOption(
+  //               child: const Text('My Expenses'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.ExpenseList);
+  //               },
+  //             ),
+  //             SimpleDialogOption(
+  //               child: const Text('Debug'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.Debug);
+  //               },
+  //             )
+  //           ],
+  //         );
+  //       });
+  // }
 
   // 2b. @new_view - Add What
-  Future<View> selectAddViewPopup(BuildContext context) async {
-    return await showDialog<View>(
-        context: context,
-        barrierDismissible: true,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-            title: const Text('Add What?'),
-            children: <Widget>[
-              SimpleDialogOption(
-                child: const Text('Task'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.TaskAdd);
-                },
-              ),
-              SimpleDialogOption(
-                child: const Text('Expense'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.ExpenseAdd);
-                },
-              ),
-              SimpleDialogOption(
-                child: const Text('To Pay'),
-                onPressed: () {
-                  Navigator.of(context).pop(View.ToPayAdd);
-                },
-              )
-            ],
-          );
-        });
-  }
+  // Future<View> selectAddViewPopup(BuildContext context) async {
+  //   return await showDialog<View>(
+  //       context: context,
+  //       barrierDismissible: true,
+  //       builder: (BuildContext context) {
+  //         return SimpleDialog(
+  //           title: const Text('Add What?'),
+  //           children: <Widget>[
+  //             SimpleDialogOption(
+  //               child: const Text('Task'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.TaskAdd);
+  //               },
+  //             ),
+  //             SimpleDialogOption(
+  //               child: const Text('Expense'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.ExpenseAdd);
+  //               },
+  //             ),
+  //             SimpleDialogOption(
+  //               child: const Text('To Pay'),
+  //               onPressed: () {
+  //                 Navigator.of(context).pop(View.ToPayAdd);
+  //               },
+  //             )
+  //           ],
+  //         );
+  //       });
+  // }
 
   // 3. @new_view - which view to open
   bottomNavOnClick(int index) async {
@@ -198,53 +201,53 @@ class ScaffoldViewState extends State<ScaffoldView> {
     // ##############################################
 
     // select view popup
-    View redirect = null;
-    if (index == navi[View.SelectView]["index"]) {
-      redirect = await selectViewPopup(_context);
-    }
-    if (index == navi[View.SelectAddView]["index"]) {
-      redirect = await selectAddViewPopup(_context);
-    }
+    // View redirect = null;
+    // if (index == navi[View.SelectView]["index"]) {
+    //   redirect = await selectViewPopup(_context);
+    // }
+    // if (index == navi[View.SelectAddView]["index"]) {
+    //   redirect = await selectAddViewPopup(_context);
+    // }
 
-    if (redirect != null) {
-      try {
-        bottomNavOnClick(navi[redirect]["index"]);
-      } catch (err) {
-        print(err);
-      }
-      return;
-    }
+    // if (redirect != null) {
+    //   try {
+    //     bottomNavOnClick(navi[redirect]["index"]);
+    //   } catch (err) {
+    //     print(err);
+    //   }
+    //   return;
+    // }
 
-    // ##############################################
-    // OPEN ADD WHAT POPUP
-    // ##############################################
-    if (index == navi[View.TaskAdd]["index"]) {
-      pushView(TaskAddView());
-      return;
-    }
-    if (index == navi[View.ExpenseAdd]["index"]) {
-      pushView(ExpenseAddView());
-      return;
-    }
-    if (index == navi[View.ToPayAdd]["index"]) {
-      pushView(ToPayAddView());
-      return;
-    }
-    // ##############################################
-    // OPEN GO TO POPUP
-    // ##############################################
-    if (index == navi[View.ExpenseList]["index"]) {
-      pushView(ExpenseListView());
-      return;
-    }
-    if (index == navi[View.ToPayList]["index"]) {
-      pushView(ToPayListView());
-      return;
-    }
-    if (index == navi[View.Debug]["index"]) {
-      pushView(DebugView());
-      return;
-    }
+    // // ##############################################
+    // // OPEN ADD WHAT POPUP
+    // // ##############################################
+    // if (index == navi[View.TaskAdd]["index"]) {
+    //   pushView(TaskAddView());
+    //   return;
+    // }
+    // if (index == navi[View.ExpenseAdd]["index"]) {
+    //   pushView(ExpenseAddView());
+    //   return;
+    // }
+    // if (index == navi[View.ToPayAdd]["index"]) {
+    //   pushView(ToPayAddView());
+    //   return;
+    // }
+    // // ##############################################
+    // // OPEN GO TO POPUP
+    // // ##############################################
+    // if (index == navi[View.ExpenseList]["index"]) {
+    //   pushView(ExpenseListView());
+    //   return;
+    // }
+    // if (index == navi[View.ToPayList]["index"]) {
+    //   pushView(ToPayListView());
+    //   return;
+    // }
+    // if (index == navi[View.Debug]["index"]) {
+    //   pushView(DebugView());
+    //   return;
+    // }
 
     // ##############################################
     // CHANGE MAIN VIEW
@@ -254,11 +257,17 @@ class ScaffoldViewState extends State<ScaffoldView> {
 
   // set view yang ada dlm bottom navigation only
   setView(int index) {
+    print("index $index");
     var view = null;
     if (index == navi[View.TaskList]["index"]) {
       view = TaskListView();
     }
-
+    if (index == navi[View.SelectAddView]["index"]) {
+      view = SelectAddView(parentContext: context);
+    }
+    if (index == navi[View.SelectView]["index"]) {
+      view = SelectView(parentContext: context);
+    }
     if (view == null) {
       view = new Container(child: Text('View at index $index not found'));
     }
@@ -295,8 +304,8 @@ class ScaffoldViewState extends State<ScaffoldView> {
               title: Text('Add'),
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
-              title: Text('Other'),
+              icon: Icon(Icons.view_carousel),
+              title: Text('Open View'),
             ),
           ],
           currentIndex: AppStore.viewIndex,

@@ -21,6 +21,8 @@ class ExpenseModel {
   static final category_insurance = "insurance";
   static final category_baby_necessity = "baby_necessity";
   static final category_transportation = "transportation";
+  static final category_saving = "saving";
+  static final category_gift = "gift";
 
   static final allCategory = <String>[
     category_rent,
@@ -29,6 +31,8 @@ class ExpenseModel {
     category_insurance,
     category_baby_necessity,
     category_transportation,
+    category_saving,
+    category_gift,
   ];
 
   static listSql() {

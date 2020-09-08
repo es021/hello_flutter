@@ -21,7 +21,7 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
   final _expenseAction = ExpenseAction.instance;
 
   final List<String> _categoryDataset = ExpenseModel.allCategory;
-  
+
   String _title;
   String _amount;
   String _category;
@@ -86,6 +86,7 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
         body: [Text("Expense successfully edited.")],
         gotItHandler: (_context) {
           ViewHelper.dialogClose(_context);
+          ViewHelper.popView(_context);
           ViewHelper.pushView(
             context: _context,
             view: ExpenseListView(),
@@ -99,6 +100,7 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
         body: [Text("New expense successfully added.")],
         viewHandler: (_context) {
           ViewHelper.dialogClose(_context);
+          ViewHelper.popView(_context);
           ViewHelper.pushView(
             context: _context,
             view: ExpenseListView(),

@@ -12,6 +12,10 @@ class _ViewHelper {
     );
   }
 
+  void popView(BuildContext context) {
+    Navigator.pop(context);
+  }
+
   /**
    * actions : <Widget>[
       FlatButton(
@@ -162,9 +166,10 @@ class _ViewHelper {
   }
 
   Widget titleSection({
-    Widget trail,
+    Widget trail = const Text(""),
     String text,
     TextStyle textStyle,
+    Widget subtextCustom,
     String subtext,
     TextStyle subtextStyle,
   }) {
@@ -177,15 +182,20 @@ class _ViewHelper {
       ),
     );
 
-    var subtextView = subtext == null
-        ? null
-        : Text(
-            subtext,
-            style: TextStyle(
-              fontSize: 17,
-              color: ColorHelper.GreyText,
-            ).merge(subtextStyle),
-          );
+    var subtextView;
+    if (subtextCustom != null) {
+      subtextView = subtextCustom;
+    } else {
+      subtextView = subtext == null
+          ? const Text("")
+          : Text(
+              subtext,
+              style: TextStyle(
+                fontSize: 17,
+                color: ColorHelper.GreyText,
+              ).merge(subtextStyle),
+            );
+    }
 
     return Container(
       width: double.infinity,

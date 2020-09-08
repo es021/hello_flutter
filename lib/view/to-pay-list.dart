@@ -150,12 +150,11 @@ class ToPayListViewState extends State<ToPayListView> {
       ],
       secondaryActions: <Widget>[
         IconSlideAction(
-          caption: 'Edit Amount',
+          caption: 'Edit',
           color: Colors.black26,
           foregroundColor: Colors.black,
           icon: Icons.edit,
           onTap: () => {
-            // ViewHelper.snackbar(context: context, text: "Edit Amount")
             ViewHelper.pushView(
               context: context,
               view: ToPayAddView(editId: d.id),
@@ -287,11 +286,28 @@ class ToPayListViewState extends State<ToPayListView> {
         ViewHelper.titleSection(
           trail: orderButton,
           text: '${TimeHelper.getMonthText(_currentMonth)} $_currentYear',
-          subtext: 'RM ${getTotalPaid().toStringAsFixed(2)}',
-          subtextStyle: TextStyle(
-            color: Colors.red,
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
+          subtextCustom: Row(
+            children: [
+              Text(
+                'RM ${getTotalPaid().toStringAsFixed(2)}',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              ),
+              SizedBox(width: 15),
+              Text("|"),
+              SizedBox(width: 15),
+              Text(
+                'RM ${getTotalPaid(isSaving: true).toStringAsFixed(2)}',
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+              )
+            ],
           ),
         ),
         renderList(context),
@@ -327,11 +343,20 @@ class ToPayListViewState extends State<ToPayListView> {
     return ret;
   }
 
-  getTotalPaid() {
+  getTotalPaid({isSaving = false}) {
     double total = 0;
     int index = 0;
     _list.forEach((d) {
       var isPaid = getIsPaid(d, index);
+      index++;
+
+      var isSkip = (!isSaving && d.category == ExpenseModel.category_saving) ||
+          (isSaving && d.category != ExpenseModel.category_saving);
+
+      if (isSkip) {
+        return;
+      }
+
       if (isPaid) {
         if (d.amount_custom != null && d.amount_custom > 0) {
           total += d.amount_custom;
@@ -339,7 +364,6 @@ class ToPayListViewState extends State<ToPayListView> {
           total += d.amount;
         }
       }
-      index++;
     });
     return total;
   }

@@ -109,6 +109,7 @@ class ToPayAddViewState extends State<ToPayAddView> {
         body: [Text("To pay successfully edited.")],
         gotItHandler: (_context) {
           ViewHelper.dialogClose(_context);
+          ViewHelper.popView(_context);
           ViewHelper.pushView(
             context: _context,
             view: ToPayListView(),
@@ -122,6 +123,7 @@ class ToPayAddViewState extends State<ToPayAddView> {
         body: [Text("New to pay successfully added.")],
         viewHandler: (_context) {
           ViewHelper.dialogClose(_context);
+          ViewHelper.popView(_context);
           ViewHelper.pushView(
             context: _context,
             view: ToPayListView(),
