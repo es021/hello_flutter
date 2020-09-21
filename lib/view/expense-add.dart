@@ -13,7 +13,8 @@ import 'package:hello_flutter/view/expense-list.dart';
 // 5. @new_entity - view (add)
 class ExpenseAddView extends StatefulWidget {
   final int editId;
-  ExpenseAddView({Key key, this.editId = 0}) : super(key: key);
+  final String category;
+  ExpenseAddView({Key key, this.editId = 0, this.category}) : super(key: key);
 
   @override
   ExpenseAddViewState createState() => ExpenseAddViewState();
@@ -46,7 +47,7 @@ class ExpenseAddViewState extends State<ExpenseAddView> {
     _title = "";
     _amount = "";
     _amount_custom = "";
-    _category = _categoryDataset[0];
+    _category = widget.category != null ? widget.category : _categoryDataset[0];
   }
 
   void componentDidMounted(BuildContext context) async {

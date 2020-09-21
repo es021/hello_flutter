@@ -9,6 +9,7 @@ class _ExpenseHelper {
   final category_transportation = "transportation";
   final category_saving = "saving";
   final category_gift = "gift";
+  final category_food = "food";
 
   getAllCategory() {
     return <String>[
@@ -16,37 +17,41 @@ class _ExpenseHelper {
       category_loan,
       category_utility,
       category_insurance,
-      category_baby_necessity,
       category_transportation,
       category_saving,
       category_gift,
+      category_food,
+      category_baby_necessity,
     ];
   }
 
   Color iconColorCategory(String cat) {
     if (cat == this.category_rent) {
-      return Colors.blue[300];
+      return Colors.blue;
     }
     if (cat == this.category_loan) {
-      return Colors.green;
+      return Colors.red[600];
     }
     if (cat == this.category_utility) {
-      return Colors.orange[300];
+      return Colors.brown[800];
     }
     if (cat == this.category_insurance) {
-      return Colors.red[600];
+      return Colors.cyan[900];
     }
     if (cat == this.category_baby_necessity) {
       return Colors.pinkAccent;
     }
     if (cat == this.category_transportation) {
-      return Colors.amber;
+      return Colors.blueGrey[700];
     }
     if (cat == this.category_saving) {
       return Colors.green;
     }
     if (cat == this.category_gift) {
-      return Colors.pink;
+      return Colors.pink[900];
+    }
+    if (cat == this.category_food) {
+      return Colors.amber[800];
     }
 
     return Colors.grey;
@@ -76,6 +81,9 @@ class _ExpenseHelper {
     }
     if (cat == this.category_gift) {
       return Icons.card_giftcard;
+    }
+    if (cat == this.category_food) {
+      return Icons.fastfood;
     }
     return Icons.warning;
   }

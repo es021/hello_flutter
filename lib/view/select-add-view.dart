@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
+import 'package:hello_flutter/view/expense-add-pre.dart';
 import 'package:hello_flutter/view/recurring-add.dart';
 import 'package:hello_flutter/view/task-add.dart';
 import 'package:hello_flutter/view/expense-add.dart';
@@ -17,7 +18,7 @@ class SelectAddView extends StatefulWidget {
 class SelectAddViewState extends State<SelectAddView> {
   final _title = "Add What?";
   final _menu = [
-     {
+    {
       "label": "Add Task",
       "view": TaskAddView(),
       "icon": Icons.check_circle,
@@ -25,7 +26,8 @@ class SelectAddViewState extends State<SelectAddView> {
     },
     {
       "label": "Add Expense",
-      "view": ExpenseAddView(),
+      // "view": ExpenseAddView(),
+      "view": ExpenseAddPreView(),
       "icon": Icons.monetization_on,
       "iconColor": Colors.red
     },
@@ -35,7 +37,6 @@ class SelectAddViewState extends State<SelectAddView> {
       "icon": Icons.library_books,
       "iconColor": Colors.green
     },
-   
   ];
 
   Widget buttonMain(title, onPressed) {

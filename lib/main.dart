@@ -7,6 +7,7 @@ import 'package:hello_flutter/view/select-view.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'view/task-list.dart';
+// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // import 'view/task-add.dart';
 // import 'package:hello_flutter/view/debug.dart';
@@ -86,7 +87,83 @@ enum View {
   ExpenseAdd
 }
 
+class NewScreen extends StatelessWidget {
+  String payload;
+
+  NewScreen({
+    @required this.payload,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(payload),
+      ),
+    );
+  }
+}
+
 class ScaffoldViewState extends State<ScaffoldView> {
+  // FlutterLocalNotificationsPlugin notification =
+  //     FlutterLocalNotificationsPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+    setView(0);
+
+    // // init push notification
+    // var initializationSettingsAndroid =
+    //     AndroidInitializationSettings('flutter_devs');
+    // var initializationSettingsIOs = IOSInitializationSettings();
+    // var initSetttings = InitializationSettings(
+    //     initializationSettingsAndroid, initializationSettingsIOs);
+    // notification.initialize(initSetttings,
+    //     onSelectNotification: onSelectNotification);
+  }
+
+  // #########################################
+  // ##### NOTIFICATION STUFFS
+
+  // Future<void> scheduleNotification() async {
+  //   var scheduledNotificationDateTime =
+  //       DateTime.now().add(Duration(seconds: 5));
+  //   var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+  //     'channel id',
+  //     'channel name',
+  //     'channel description',
+  //     icon: 'flutter_devs',
+  //     largeIcon: DrawableResourceAndroidBitmap('flutter_devs'),
+  //   );
+  //   var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  //   var platformChannelSpecifics = NotificationDetails(
+  //       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  //   await notification.schedule(0, 'scheduled title', 'scheduled body',
+  //       scheduledNotificationDateTime, platformChannelSpecifics);
+  // }
+
+  // showNotification() async {
+  //   var android = AndroidNotificationDetails('id', 'channel ', 'description',
+  //       priority: Priority.High, importance: Importance.Max);
+  //   var iOS = IOSNotificationDetails();
+  //   var platform = new NotificationDetails(android, iOS);
+  //   await notification.show(
+  //       0, 'Flutter devs', 'Flutter Local Notification Demo', platform,
+  //       payload: 'Welcome to the Local Notification demo');
+  // }
+
+  // Future onSelectNotification(String payload) {
+  //   Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+  //     return NewScreen(
+  //       payload: payload,
+  //     );
+  //   }));
+  // }
+
+  // ##### NOTIFICATION STUFFS
+  // #########################################
+
   // var _currentView = null;
   BuildContext _context = null;
 
@@ -109,12 +186,6 @@ class ScaffoldViewState extends State<ScaffoldView> {
     // 'add_task': {'index': 1, "is_push_view": true},
     // 'debug': {'index': 2},
   };
-
-  @override
-  void initState() {
-    super.initState();
-    setView(0);
-  }
 
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
@@ -196,62 +267,7 @@ class ScaffoldViewState extends State<ScaffoldView> {
 
   // 3. @new_view - which view to open
   bottomNavOnClick(int index) async {
-    // ##############################################
-    // SELECT VIEW FROM POPUP
-    // ##############################################
-
-    // select view popup
-    // View redirect = null;
-    // if (index == navi[View.SelectView]["index"]) {
-    //   redirect = await selectViewPopup(_context);
-    // }
-    // if (index == navi[View.SelectAddView]["index"]) {
-    //   redirect = await selectAddViewPopup(_context);
-    // }
-
-    // if (redirect != null) {
-    //   try {
-    //     bottomNavOnClick(navi[redirect]["index"]);
-    //   } catch (err) {
-    //     print(err);
-    //   }
-    //   return;
-    // }
-
-    // // ##############################################
-    // // OPEN ADD WHAT POPUP
-    // // ##############################################
-    // if (index == navi[View.TaskAdd]["index"]) {
-    //   pushView(TaskAddView());
-    //   return;
-    // }
-    // if (index == navi[View.RecurringAdd]["index"]) {
-    //   pushView(RecurringAddView());
-    //   return;
-    // }
-    // if (index == navi[View.ExpenseAdd]["index"]) {
-    //   pushView(ExpenseAddView());
-    //   return;
-    // }
-    // // ##############################################
-    // // OPEN GO TO POPUP
-    // // ##############################################
-    // if (index == navi[View.RecurringList]["index"]) {
-    //   pushView(RecurringListView());
-    //   return;
-    // }
-    // if (index == navi[View.ExpenseList]["index"]) {
-    //   pushView(ExpenseListView());
-    //   return;
-    // }
-    // if (index == navi[View.Debug]["index"]) {
-    //   pushView(DebugView());
-    //   return;
-    // }
-
-    // ##############################################
-    // CHANGE MAIN VIEW
-    // ##############################################
+    // scheduleNotification();
     AppStore.setViewIndex(index);
   }
 

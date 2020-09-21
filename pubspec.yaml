@@ -26,6 +26,7 @@ dependencies:
   splashscreen: ^1.2.0
   mobx: ^1.0.0
   flutter_mobx: ^1.0.0
+  # flutter_local_notifications: ^1.4.4+1
   # persistent_bottom_nav_bar: any
 
   # The following adds the Cupertino Icons font to your application.
