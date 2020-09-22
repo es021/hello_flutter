@@ -7,7 +7,6 @@ import 'package:hello_flutter/view/select-view.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:flutter/cupertino.dart';
 import 'view/task-list.dart';
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 // import 'view/task-add.dart';
 // import 'package:hello_flutter/view/debug.dart';
@@ -28,6 +27,56 @@ class MyAppWrapper extends StatefulWidget {
 }
 
 class _MyAppStateWrapper extends State<MyAppWrapper> {
+
+  @override
+  initState() {
+    super.initState();
+  }
+
+  // initNotification() {
+  //   // initialise the plugin. app_icon needs to be a added as a drawable resource to the Android head project
+  //   // If you have skipped STEP 3 then change app_icon to @mipmap/ic_launcher
+  //   var initAndroid = new AndroidInitializationSettings('@mipmap/ic_launcher');
+  //   var initIOS = new IOSInitializationSettings();
+  //   var initSetting = new InitializationSettings(
+  //     initAndroid,
+  //     initIOS,
+  //   );
+  //   noti = new FlutterLocalNotificationsPlugin();
+  //   noti.initialize(
+  //     initSetting,
+  //     onSelectNotification: onSelectNotification,
+  //   );
+  // }
+
+  // Future onSelectNotification(String payload) async {
+  //   showDialog(
+  //     context: context,
+  //     builder: (_) {
+  //       return new AlertDialog(
+  //         title: Text("PayLoad"),
+  //         content: Text("Payload : $payload"),
+  //       );
+  //     },
+  //   );
+  // }
+
+  // Future showNotificationWithDefaultSound() async {
+  //   var androidPlatformChannelSpecifics = new AndroidNotificationDetails(
+  //       'your channel id', 'your channel name', 'your channel description',
+  //       importance: Importance.Max, priority: Priority.High);
+  //   var iOSPlatformChannelSpecifics = new IOSNotificationDetails();
+  //   var platformChannelSpecifics = new NotificationDetails(
+  //       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  //   await noti.show(
+  //     0,
+  //     'New Post',
+  //     'How to Show Notification in Flutter',
+  //     platformChannelSpecifics,
+  //     payload: 'Default_Sound',
+  //   );
+  // }
+
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
@@ -87,22 +136,22 @@ enum View {
   ExpenseAdd
 }
 
-class NewScreen extends StatelessWidget {
-  String payload;
+// class NewScreen extends StatelessWidget {
+//   String payload;
 
-  NewScreen({
-    @required this.payload,
-  });
+//   NewScreen({
+//     @required this.payload,
+//   });
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(payload),
-      ),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text(payload),
+//       ),
+//     );
+//   }
+// }
 
 class ScaffoldViewState extends State<ScaffoldView> {
   // FlutterLocalNotificationsPlugin notification =

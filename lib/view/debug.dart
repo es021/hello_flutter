@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/action/ExpenseAction.dart';
 import 'package:hello_flutter/helper/database-helper.dart';
-
+import 'package:hello_flutter/helper/notification-helper.dart';
 import 'package:hello_flutter/store/counter.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 
@@ -12,6 +12,12 @@ class DebugView extends StatefulWidget {
 }
 
 class DebugViewState extends State<DebugView> {
+  NotificationHelper notificationHelper = NotificationHelper.instance;
+  @override
+  initState() {
+    super.initState();
+  }
+
   final _toPayAction = ExpenseAction.instance;
   var title = "Debugging Tools";
   final dbHelper = DatabaseHelper.instance;
@@ -118,6 +124,9 @@ class DebugViewState extends State<DebugView> {
                       setState(() {
                         _debugText = r;
                       });
+                    }),
+                    buttonDebug("Show Notification", () {
+                      notificationHelper.showNotificationWithDefaultSound();
                     }),
                     ...mobxView(),
                     getDebugTextView(),
