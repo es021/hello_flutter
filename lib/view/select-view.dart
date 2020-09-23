@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:hello_flutter/helper/color-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
 import 'package:hello_flutter/view/debug.dart';
+import 'package:hello_flutter/view/expense-summary.dart';
 import 'expense-list.dart';
 import 'recurring-list.dart';
 
@@ -22,6 +23,12 @@ class SelectViewState extends State<SelectView> {
       "view": ExpenseListView(),
       "icon": Icons.monetization_on,
       "iconColor": Colors.red
+    },
+    {
+      "label": "Expenses' Summary",
+      "view": ExpenseSummaryView(),
+      "icon": Icons.pie_chart,
+      "iconColor": Colors.teal
     },
     {
       "label": "Recurring Payment",

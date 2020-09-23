@@ -56,6 +56,7 @@ class ExpenseModel {
   int id;
   String title;
   String category;
+  double total;
   double amount;
   double amount_custom;
   String is_paid;
@@ -65,6 +66,11 @@ class ExpenseModel {
   int updated_at;
 
   ExpenseModel();
+
+  ExpenseModel.fromMapByCategory(Map<String, dynamic> map) {
+    category = map["category"];
+    total = map["total"];
+  }
 
   ExpenseModel.fromMap(Map<String, dynamic> map) {
     id = map["id"];

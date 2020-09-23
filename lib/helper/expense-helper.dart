@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 class _ExpenseHelper {
   final category_rent = "rent";
@@ -25,35 +26,73 @@ class _ExpenseHelper {
     ];
   }
 
-  Color iconColorCategory(String cat) {
+  iconColorCategory(String cat, {bool forChart = false}) {
     if (cat == this.category_rent) {
+      if (forChart) {
+        return charts.MaterialPalette.blue.shadeDefault;
+      }
       return Colors.blue;
     }
+
     if (cat == this.category_loan) {
+      if (forChart) {
+        return charts.MaterialPalette.red.shadeDefault;
+      }
       return Colors.red[600];
     }
+
     if (cat == this.category_utility) {
+      if (forChart) {
+        return charts.MaterialPalette.gray.shadeDefault;
+      }
       return Colors.brown[800];
     }
+
     if (cat == this.category_insurance) {
+      if (forChart) {
+        return charts.MaterialPalette.cyan.shadeDefault;
+      }
       return Colors.cyan[900];
     }
+
     if (cat == this.category_baby_necessity) {
+      if (forChart) {
+        return charts.MaterialPalette.pink.shadeDefault;
+      }
       return Colors.pinkAccent;
     }
+
     if (cat == this.category_transportation) {
+      if (forChart) {
+        return charts.MaterialPalette.blue.shadeDefault;
+      }
       return Colors.blueGrey[700];
     }
+
     if (cat == this.category_saving) {
+      if (forChart) {
+        return charts.MaterialPalette.green.shadeDefault;
+      }
       return Colors.green;
     }
+
     if (cat == this.category_gift) {
+      if (forChart) {
+        return charts.MaterialPalette.pink.shadeDefault;
+      }
       return Colors.pink[900];
     }
+
     if (cat == this.category_food) {
+      if (forChart) {
+        return charts.MaterialPalette.deepOrange.shadeDefault;
+      }
       return Colors.amber[800];
     }
 
+    if (forChart) {
+      return charts.MaterialPalette.gray.shadeDefault;
+    }
     return Colors.grey;
   }
 

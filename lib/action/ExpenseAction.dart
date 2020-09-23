@@ -10,7 +10,7 @@ class ExpenseAction {
   // only have a single app-wide reference to the database
   final dbHelper = DatabaseHelper.instance;
 
-  query(month, year, orderBy) async {
+  query(month, year, {orderBy}) async {
     orderBy = orderBy != null && orderBy != "" ? "order by $orderBy" : "";
     var rows = await dbHelper.queryRaw(''' 
       SELECT * FROM ${ExpenseModel.table} WHERE month=$month AND year=$year 
@@ -18,6 +18,27 @@ class ExpenseAction {
     ''');
     var toRet = [];
     rows.forEach((r) => {toRet.add(ExpenseModel.fromMap(r))});
+    return toRet;
+  }
+
+  queryGroupByCategory(month, year) async {
+    String q = ''' 
+      SELECT category, 
+      SUM(CASE WHEN  amount_custom IS NULL THEN amount ELSE amount_custom END) as total 
+      FROM ${ExpenseModel.table} 
+      WHERE month=$month AND year=$year 
+      GROUP BY category
+    ''';
+
+    print(q);
+    print(q);
+    print(q);
+    print(q);
+    var rows = await dbHelper.queryRaw(q);
+    var toRet = [];
+    rows.forEach((r) => {toRet.add(ExpenseModel.fromMapByCategory(r))});
+
+    print(toRet);
     return toRet;
   }
 

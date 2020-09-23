@@ -20,7 +20,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
   // ##############################################################################
   // variables
   // ##############################################################################
-  final _toPayAction = ExpenseAction.instance;
+  final _expenseAction = ExpenseAction.instance;
   final _initialMonth = TimeHelper.currentMonth();
   final _initialYear = TimeHelper.currentYear();
   int _currentMonth = TimeHelper.currentMonth();
@@ -173,7 +173,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
       ExpenseModel.col_is_paid: is_paid,
       ExpenseModel.col_updated_at: TimeHelper.currentTimeInSeconds()
     };
-    final rowsAffected = await _toPayAction.update(row);
+    final rowsAffected = await _expenseAction.update(row);
     print('updated $rowsAffected row(s)');
   }
 
@@ -184,7 +184,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
         child: ViewHelper.emptyState(
           actionText: "Generate From Recurring",
           actionHandler: () async {
-            await _toPayAction.populateMonthly(
+            await _expenseAction.populateMonthly(
                 month: _currentMonth, year: _currentYear);
             refreshList();
           },
@@ -233,8 +233,11 @@ class ExpenseListViewState extends State<ExpenseListView> {
     });
     emptyList();
 
-    var rows = await _toPayAction.query(
-        _currentMonth, _currentYear, getOrderBy()["sql"]);
+    var rows = await _expenseAction.query(
+      _currentMonth,
+      _currentYear,
+      orderBy: getOrderBy()["sql"],
+    );
     rows.forEach((r) => {addLastList(r)});
     setState(() {
       _loading = false;
