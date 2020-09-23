@@ -33,9 +33,9 @@ class _ExpenseHelper {
   iconColorCategory(String cat, {bool forChart = false}) {
     if (cat == this.category_entertainment) {
       if (forChart) {
-        return charts.MaterialPalette.deepOrange.shadeDefault;
+        return charts.MaterialPalette.teal.shadeDefault;
       }
-      return Colors.deepOrange;
+      return Colors.teal[600];
     }
 
     if (cat == this.category_vacation) {

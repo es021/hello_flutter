@@ -52,21 +52,28 @@ class TaskListViewState extends State<TaskListView> {
 
             var titleStyle = isChecked
                 ? TextStyle(
-                    color: Colors.black.withOpacity(0.4),
-                    decoration: TextDecoration.lineThrough)
+                    color: Colors.black.withOpacity(0.35),
+                    fontStyle: FontStyle.italic,
+                  )
                 : TextStyle();
 
             var title = new Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  new Text(task.title,
-                      style: titleStyle.merge(TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold))),
-                  SizedBox(height: 3),
-                  new Text(createdAt,
-                      style: titleStyle.merge(TextStyle(
-                          fontSize: 11, fontStyle: FontStyle.italic))),
+                  new Text(
+                    task.title,
+                    style: titleStyle.merge(
+                      TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  // SizedBox(height: 3),
+                  // new Text(
+                  //   createdAt,
+                  //   style: titleStyle.merge(
+                  //     TextStyle(fontSize: 11, fontStyle: FontStyle.italic),
+                  //   ),
+                  // ),
                 ]);
 
             var listTile = CheckboxListTile(
