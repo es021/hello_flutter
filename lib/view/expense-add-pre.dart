@@ -25,7 +25,11 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
   }
 
   getCategoryButton() {
-    double size = 45;
+    
+    double sizeIcon = 40;
+    double sizeCircle = sizeIcon + 25;
+    double sizeContainer = sizeIcon + 60;
+
     List<Widget> r = [];
     for (var i = 0; i < _categoryDataset.length; i++) {
       var cat = _categoryDataset[i];
@@ -36,10 +40,10 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
           shape: CircleBorder(),
         ),
         child: new SizedBox(
-          height: size + 25,
-          width: size + 25,
+          height: sizeCircle,
+          width: sizeCircle,
           child: IconButton(
-            icon: Icon(ExpenseHelper.iconCategory(cat), size: size),
+            icon: Icon(ExpenseHelper.iconCategory(cat), size: sizeIcon),
             color: Colors.white,
             onPressed: () {
               // print(cat);
@@ -52,8 +56,8 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
 
       r.add(
         SizedBox(
-          height: size + 55,
-          width: size + 55,
+          height: sizeContainer,
+          width: sizeContainer,
           child: Column(
             children: [button, SizedBox(height: 7), Text(cat)],
           ),
@@ -69,20 +73,23 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
     return new Scaffold(
       appBar: new AppBar(title: new Text(title)),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: new EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Wrap(
-                direction: Axis.horizontal,
-                alignment: WrapAlignment.center,
-                // alignment: WrapAlignment.spaceAround,
-                spacing: 30.0, // gap between adjacent chips
-                runSpacing: 30.0, // gap between lines
-                children: getCategoryButton(),
-              ),
-            ],
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: new EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Wrap(
+                  direction: Axis.horizontal,
+                  alignment: WrapAlignment.center,
+                  // alignment: WrapAlignment.spaceAround,
+                  spacing: 30.0, // gap between adjacent chips
+                  runSpacing: 30.0, // gap between lines
+                  children: getCategoryButton(),
+                ),
+              ],
+            ),
           ),
         ),
       ),
