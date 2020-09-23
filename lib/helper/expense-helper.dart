@@ -11,6 +11,8 @@ class _ExpenseHelper {
   final category_saving = "saving";
   final category_gift = "gift";
   final category_food = "food";
+  final category_vacation = "vacation";
+  final category_entertainment = "entertainment";
 
   getAllCategory() {
     return <String>[
@@ -23,10 +25,26 @@ class _ExpenseHelper {
       category_gift,
       category_food,
       category_baby_necessity,
+      category_vacation,
+      category_entertainment,
     ];
   }
 
   iconColorCategory(String cat, {bool forChart = false}) {
+    if (cat == this.category_entertainment) {
+      if (forChart) {
+        return charts.MaterialPalette.deepOrange.shadeDefault;
+      }
+      return Colors.deepOrange;
+    }
+
+    if (cat == this.category_vacation) {
+      if (forChart) {
+        return charts.MaterialPalette.blue.shadeDefault;
+      }
+      return Colors.indigoAccent;
+    }
+
     if (cat == this.category_rent) {
       if (forChart) {
         return charts.MaterialPalette.blue.shadeDefault;
@@ -97,6 +115,12 @@ class _ExpenseHelper {
   }
 
   IconData iconCategory(String cat) {
+    if (cat == this.category_entertainment) {
+      return Icons.gamepad;
+    }
+    if (cat == this.category_vacation) {
+      return Icons.hotel;
+    }
     if (cat == this.category_rent) {
       return Icons.home;
     }

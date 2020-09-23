@@ -25,7 +25,7 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
   }
 
   getCategoryButton() {
-    double size = 50;
+    double size = 45;
     List<Widget> r = [];
     for (var i = 0; i < _categoryDataset.length; i++) {
       var cat = _categoryDataset[i];
@@ -36,8 +36,8 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
           shape: CircleBorder(),
         ),
         child: new SizedBox(
-          height: size + 20,
-          width: size + 20,
+          height: size + 25,
+          width: size + 25,
           child: IconButton(
             icon: Icon(ExpenseHelper.iconCategory(cat), size: size),
             color: Colors.white,
@@ -50,9 +50,15 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
         ),
       );
 
-      r.add(Column(
-        children: [button, SizedBox(height: 7), Text(cat)],
-      ));
+      r.add(
+        SizedBox(
+          height: size + 55,
+          width: size + 55,
+          child: Column(
+            children: [button, SizedBox(height: 7), Text(cat)],
+          ),
+        ),
+      );
     }
     return r;
   }
@@ -63,14 +69,20 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
     return new Scaffold(
       appBar: new AppBar(title: new Text(title)),
       body: SingleChildScrollView(
-        child: Container(
-          padding: new EdgeInsets.all(30.0),
-          child: Wrap(
-            direction: Axis.horizontal,
-            // alignment: WrapAlignment.spaceAround,
-            spacing: 30.0, // gap between adjacent chips
-            runSpacing: 30.0, // gap between lines
-            children: getCategoryButton(),
+        child: Padding(
+          padding: new EdgeInsets.all(20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Wrap(
+                direction: Axis.horizontal,
+                alignment: WrapAlignment.center,
+                // alignment: WrapAlignment.spaceAround,
+                spacing: 30.0, // gap between adjacent chips
+                runSpacing: 30.0, // gap between lines
+                children: getCategoryButton(),
+              ),
+            ],
           ),
         ),
       ),
