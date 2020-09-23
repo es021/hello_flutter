@@ -25,10 +25,9 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
   }
 
   getCategoryButton() {
-    
-    double sizeIcon = 40;
+    double sizeIcon = 30;
     double sizeCircle = sizeIcon + 25;
-    double sizeContainer = sizeIcon + 60;
+    double sizeContainer = sizeIcon + 30;
 
     List<Widget> r = [];
     for (var i = 0; i < _categoryDataset.length; i++) {
@@ -56,10 +55,17 @@ class ExpenseAddPreViewState extends State<ExpenseAddPreView> {
 
       r.add(
         SizedBox(
-          height: sizeContainer,
+          height: sizeContainer + 20,
           width: sizeContainer,
           child: Column(
-            children: [button, SizedBox(height: 7), Text(cat)],
+            children: [
+              button,
+              SizedBox(height: 7),
+              Text(
+                cat,
+                overflow: TextOverflow.ellipsis,
+              )
+            ],
           ),
         ),
       );
