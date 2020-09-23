@@ -214,7 +214,7 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
         padding: EdgeInsets.fromLTRB(10, 0, 10, 30),
         child: PieChart(
           getDataSeries(),
-          legendLabelFn: (value) => ' ( RM $value )',
+          legendLabelFn: (value) => ' ( RM ${value.toStringAsFixed(2)} )',
         ),
       ),
     );
