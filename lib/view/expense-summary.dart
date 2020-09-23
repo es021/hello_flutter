@@ -3,11 +3,15 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
 import 'package:hello_flutter/action/ExpenseAction.dart';
 import 'package:hello_flutter/component/pie-chart.dart';
+import 'package:hello_flutter/helper/color-helper.dart';
 import 'package:hello_flutter/helper/expense-helper.dart';
 import 'package:hello_flutter/helper/time-helper.dart';
 import 'package:hello_flutter/helper/view-helper.dart';
+import 'package:hello_flutter/view/expense-list.dart';
 
 class ExpenseSummaryView extends StatefulWidget {
+  final int pageIndex;
+  ExpenseSummaryView({Key key, this.pageIndex = 0}) : super(key: key);
   @override
   ExpenseSummaryViewState createState() => ExpenseSummaryViewState();
 }
@@ -22,15 +26,19 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
   final _initialYear = TimeHelper.currentYear();
   int _currentMonth = TimeHelper.currentMonth();
   int _currentYear = TimeHelper.currentYear();
+  int _currentPageIndex;
   String title = "Expense Summary";
 
   @override
   void initState() {
     super.initState();
-    refreshList();
     _pageController = PageController(
-      initialPage: 0,
+      initialPage: widget.pageIndex,
     );
+
+    // refreshList();
+
+    updatePage(widget.pageIndex);
   }
 
   void emptyList() {
@@ -49,13 +57,18 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
     });
     emptyList();
 
-    var rows =
-        await _expenseAction.queryGroupByCategory(_currentMonth, _currentYear);
+    var rows = await _expenseAction.queryGroupByCategory(
+      _currentMonth,
+      _currentYear,
+    );
+
     rows.forEach((r) {
+      // print('${r.category} ${r.total}');
       if (r.total > 0) {
         addLastList(getObj(r.category, r.total));
       }
     });
+
     setState(() {
       _loading = false;
     });
@@ -130,31 +143,65 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
     return ret;
   }
 
+  getAction() {
+    var listButton = FlatButton(
+      padding: EdgeInsets.only(left: -30),
+      onPressed: () {
+        ViewHelper.popView(context);
+        ViewHelper.pushView(
+          context: context,
+          view: ExpenseListView(pageIndex: _currentPageIndex),
+        );
+      },
+      child: Row(
+        children: [
+          Icon(
+            Icons.list,
+            color: Colors.grey,
+          ),
+          SizedBox(width: 10),
+          Text(
+            'View List',
+            style: TextStyle(color: ColorHelper.GreyText),
+          )
+        ],
+      ),
+    );
+
+    return Row(children: [listButton]);
+  }
+
   renderTitle() {
+    var sumText = Row(
+      children: [
+        Text(
+          'RM ${getTotalPaid().toStringAsFixed(2)}',
+          style: TextStyle(
+            color: Colors.red,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+        SizedBox(width: 15),
+        Text("|"),
+        SizedBox(width: 15),
+        Text(
+          'RM ${getTotalPaid(isSaving: true).toStringAsFixed(2)}',
+          style: TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        )
+      ],
+    );
     // return 'Expense ${TimeHelper.getMonthText(_currentMonth)} $_currentYear';
     return ViewHelper.titleSection(
       text: '${TimeHelper.getMonthText(_currentMonth)} $_currentYear',
-      subtextCustom: Row(
+      subtextCustom: Column(
         children: [
-          Text(
-            'RM ${getTotalPaid().toStringAsFixed(2)}',
-            style: TextStyle(
-              color: Colors.red,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          ),
-          SizedBox(width: 15),
-          Text("|"),
-          SizedBox(width: 15),
-          Text(
-            'RM ${getTotalPaid(isSaving: true).toStringAsFixed(2)}',
-            style: TextStyle(
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
-          )
+          sumText,
+          getAction(),
         ],
       ),
     );
@@ -173,6 +220,14 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
     );
   }
 
+  updatePage(pageIndex) {
+    setState(() {
+      _currentPageIndex = pageIndex;
+      _currentMonth = _initialMonth - pageIndex;
+    });
+    refreshList();
+  }
+
   @override
   Widget build(BuildContext context) {
     var pageView = PageView(
@@ -180,11 +235,7 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
       reverse: true,
       pageSnapping: true,
       onPageChanged: (int pageIndex) {
-        setState(() {
-          _currentMonth = _initialMonth - pageIndex;
-        });
-        // print("pageIndex=$pageIndex");
-        refreshList();
+        updatePage(pageIndex);
       },
       children: getPageChildren(),
     );

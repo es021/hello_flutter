@@ -1,6 +1,7 @@
 import 'dart:ffi';
 
 import 'package:flutter/material.dart';
+import 'package:hello_flutter/helper/expense-helper.dart';
 import 'package:sqflite/sqflite.dart';
 
 class ExpenseModel {
@@ -47,10 +48,21 @@ class ExpenseModel {
       ON $table ($col_title, $col_category, $col_month, $col_year)
     ''');
 
+    // mock data
+    // await db.execute('''
+    //   INSERT INTO $table ($col_title, $col_category, $col_month, $col_year, $col_amount, $col_amount_custom) 
+    //   VALUES 
+    //   ('Item ${ExpenseHelper.category_baby_necessity}', '${ExpenseHelper.category_baby_necessity}', 9, 2020, 40.5, 0),
+    //   ('Item ${ExpenseHelper.category_food}', '${ExpenseHelper.category_food}', 9, 2020, 100.00, null),
+    //   ('Item ${ExpenseHelper.category_transportation}', '${ExpenseHelper.category_transportation}', 9, 2020, 210.0, null),
+    //   ('Item ${ExpenseHelper.category_utility}', '${ExpenseHelper.category_utility}', 9, 2020, 21.21, 0),
+    //   ('Item ${ExpenseHelper.category_baby_necessity} 2', '${ExpenseHelper.category_baby_necessity}', 9, 2020, 140.5, null)
+    // ''');
+
     // the old expenses already renamed to recurring
-    await db.execute('''
-      DROP table expenses
-    ''');
+    // await db.execute('''
+    //   DROP table expenses
+    // ''');
   }
 
   int id;

@@ -24,21 +24,15 @@ class ExpenseAction {
   queryGroupByCategory(month, year) async {
     String q = ''' 
       SELECT category, 
-      SUM(CASE WHEN  amount_custom IS NULL THEN amount ELSE amount_custom END) as total 
+      SUM(CASE WHEN  amount_custom IS NULL OR amount_custom <= 0 THEN amount ELSE amount_custom END) as total 
       FROM ${ExpenseModel.table} 
-      WHERE month=$month AND year=$year 
-      GROUP BY category
+      WHERE month=$month AND year=$year AND is_paid='1'
+      GROUP BY category ORDER BY total desc
     ''';
 
-    print(q);
-    print(q);
-    print(q);
-    print(q);
     var rows = await dbHelper.queryRaw(q);
     var toRet = [];
     rows.forEach((r) => {toRet.add(ExpenseModel.fromMapByCategory(r))});
-
-    print(toRet);
     return toRet;
   }
 

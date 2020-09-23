@@ -167,6 +167,7 @@ class _ViewHelper {
   }
 
   Widget titleSection({
+    Function onPressed,
     Widget trail = const Text(""),
     String text,
     TextStyle textStyle,
@@ -179,7 +180,7 @@ class _ViewHelper {
       style: TextStyle(
         fontSize: 27,
         fontWeight: FontWeight.bold,
-        color: ColorHelper.GreyText,
+        color: onPressed != null ? ColorHelper.BlueLink : ColorHelper.GreyText,
       ),
     );
 
@@ -207,7 +208,16 @@ class _ViewHelper {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [textView, trail],
+            children: [
+              onPressed != null
+                  ? FlatButton(
+                      padding: EdgeInsets.only(left: -10),
+                      onPressed: onPressed,
+                      child: textView,
+                    )
+                  : textView,
+              trail,
+            ],
           ),
           subtextView,
         ],

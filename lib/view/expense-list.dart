@@ -10,8 +10,11 @@ import 'package:hello_flutter/model/ExpenseModel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hello_flutter/view/expense-add.dart';
+import 'package:hello_flutter/view/expense-summary.dart';
 
 class ExpenseListView extends StatefulWidget {
+  final int pageIndex;
+  ExpenseListView({Key key, this.pageIndex = 0}) : super(key: key);
   @override
   ExpenseListViewState createState() => ExpenseListViewState();
 }
@@ -25,7 +28,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
   final _initialYear = TimeHelper.currentYear();
   int _currentMonth = TimeHelper.currentMonth();
   int _currentYear = TimeHelper.currentYear();
-
+  int _currentPageIndex;
   int _orderByCurrentIndex = 0;
   var _orderByList = [
     {
@@ -250,10 +253,71 @@ class ExpenseListViewState extends State<ExpenseListView> {
   @override
   void initState() {
     super.initState();
-    refreshList();
     _pageController = PageController(
       initialPage: 0,
     );
+    updatePage(widget.pageIndex);
+  }
+
+  updatePage(pageIndex) {
+    setState(() {
+      _currentPageIndex = pageIndex;
+      _currentMonth = _initialMonth - pageIndex;
+    });
+    refreshList();
+  }
+
+  getAction() {
+    var orderButton = FlatButton(
+      padding: EdgeInsets.only(left: -10),
+      onPressed: () {
+        setState(() {
+          _orderByCurrentIndex = _orderByCurrentIndex + 1;
+          if (_orderByCurrentIndex >= _orderByList.length) {
+            _orderByCurrentIndex = 0;
+          }
+        });
+        refreshList();
+      },
+      child: Row(
+        children: [
+          Icon(
+            Icons.filter_list,
+            color: Colors.grey,
+          ),
+          SizedBox(width: 10),
+          Text(
+            '${getOrderBy()["label"]}',
+            style: TextStyle(color: ColorHelper.GreyText),
+          )
+        ],
+      ),
+    );
+
+    var summaryButton = FlatButton(
+      onPressed: () {
+        ViewHelper.popView(context);
+        ViewHelper.pushView(
+          context: context,
+          view: ExpenseSummaryView(pageIndex: _currentPageIndex),
+        );
+      },
+      child: Row(
+        children: [
+          Icon(
+            Icons.pie_chart,
+            color: Colors.grey,
+          ),
+          SizedBox(width: 10),
+          Text(
+            'View Summary',
+            style: TextStyle(color: ColorHelper.GreyText),
+          )
+        ],
+      ),
+    );
+
+    return Row(children: [orderButton, summaryButton]);
   }
 
   getMainView() {
@@ -261,56 +325,41 @@ class ExpenseListViewState extends State<ExpenseListView> {
     if (_loading) {
       body = <Widget>[ViewHelper.loading()];
     } else {
-      var orderButton = FlatButton(
-        onPressed: () {
-          setState(() {
-            _orderByCurrentIndex = _orderByCurrentIndex + 1;
-            if (_orderByCurrentIndex >= _orderByList.length) {
-              _orderByCurrentIndex = 0;
-            }
-          });
-          refreshList();
-        },
-        child: Row(
-          children: [
-            Icon(
-              Icons.filter_list,
-              color: Colors.grey,
+      var sumText = Row(
+        children: [
+          Text(
+            'RM ${getTotalPaid().toStringAsFixed(2)}',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
             ),
-            SizedBox(width: 10),
-            Text(
-              '${getOrderBy()["label"]}',
-              style: TextStyle(color: ColorHelper.GreyText),
-            )
-          ],
-        ),
+          ),
+          SizedBox(width: 15),
+          Text("|"),
+          SizedBox(width: 15),
+          Text(
+            'RM ${getTotalPaid(isSaving: true).toStringAsFixed(2)}',
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+              fontSize: 20,
+            ),
+          )
+        ],
       );
 
       body = <Widget>[
         ViewHelper.titleSection(
-          trail: orderButton,
+          // onPressed: () {
+          //   ViewHelper.pushView(context: context, view: ExpenseSummaryView());
+          // },
+          // trail: Column(children: <Widget>[summaryButton, orderButton]),
           text: '${TimeHelper.getMonthText(_currentMonth)} $_currentYear',
-          subtextCustom: Row(
+          subtextCustom: Column(
             children: [
-              Text(
-                'RM ${getTotalPaid().toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: Colors.red,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              SizedBox(width: 15),
-              Text("|"),
-              SizedBox(width: 15),
-              Text(
-                'RM ${getTotalPaid(isSaving: true).toStringAsFixed(2)}',
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              )
+              sumText,
+              getAction(),
             ],
           ),
         ),
@@ -379,11 +428,7 @@ class ExpenseListViewState extends State<ExpenseListView> {
       reverse: true,
       pageSnapping: true,
       onPageChanged: (int pageIndex) {
-        setState(() {
-          _currentMonth = _initialMonth - pageIndex;
-        });
-        // print("pageIndex=$pageIndex");
-        refreshList();
+        updatePage(pageIndex);
       },
       children: getPageChildren(),
     );

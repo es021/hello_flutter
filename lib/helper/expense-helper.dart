@@ -64,7 +64,7 @@ class _ExpenseHelper {
 
     if (cat == this.category_transportation) {
       if (forChart) {
-        return charts.MaterialPalette.blue.shadeDefault;
+        return charts.MaterialPalette.lime.shadeDefault;
       }
       return Colors.blueGrey[700];
     }
@@ -78,7 +78,7 @@ class _ExpenseHelper {
 
     if (cat == this.category_gift) {
       if (forChart) {
-        return charts.MaterialPalette.pink.shadeDefault;
+        return charts.MaterialPalette.indigo.shadeDefault;
       }
       return Colors.pink[900];
     }
