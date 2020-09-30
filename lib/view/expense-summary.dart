@@ -22,21 +22,25 @@ class ExpenseSummaryViewState extends State<ExpenseSummaryView> {
   bool _loading = false;
   PageController _pageController;
   final _expenseAction = ExpenseAction.instance;
-  final _initialMonth = TimeHelper.currentMonth();
-  final _initialYear = TimeHelper.currentYear();
-  int _currentMonth = TimeHelper.currentMonth();
-  int _currentYear = TimeHelper.currentYear();
+  int _initialMonth;
+  int _initialYear;
+  int _currentMonth;
+  int _currentYear;
   int _currentPageIndex;
   String title = "Expense Summary";
 
   @override
   void initState() {
     super.initState();
+
+    _initialMonth = ExpenseHelper.getInitialMonth();
+    _initialYear = ExpenseHelper.getInitialYear();
+    _currentMonth = ExpenseHelper.getInitialMonth();
+    _currentYear = ExpenseHelper.getInitialYear();
+
     _pageController = PageController(
       initialPage: widget.pageIndex,
     );
-
-    // refreshList();
 
     updatePage(widget.pageIndex);
   }

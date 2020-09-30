@@ -6,6 +6,13 @@ class _TimeHelper {
     return (ms / 1000).round();
   }
 
+  int currentDay(){
+    var now = new DateTime.now();
+    var formatter = new DateFormat('dd');
+    String d = formatter.format(now);
+    return int.parse(d);
+  }
+
   int currentMonth() {
     var now = new DateTime.now();
     var formatter = new DateFormat('MM');

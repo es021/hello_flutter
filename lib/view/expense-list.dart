@@ -24,10 +24,10 @@ class ExpenseListViewState extends State<ExpenseListView> {
   // variables
   // ##############################################################################
   final _expenseAction = ExpenseAction.instance;
-  final _initialMonth = TimeHelper.currentMonth();
-  final _initialYear = TimeHelper.currentYear();
-  int _currentMonth = TimeHelper.currentMonth();
-  int _currentYear = TimeHelper.currentYear();
+  int _initialMonth;
+  int _initialYear;
+  int _currentMonth;
+  int _currentYear;
   int _currentPageIndex;
   int _orderByCurrentIndex = 0;
   var _orderByList = [
@@ -253,6 +253,12 @@ class ExpenseListViewState extends State<ExpenseListView> {
   @override
   void initState() {
     super.initState();
+    
+    _initialMonth = ExpenseHelper.getInitialMonth();
+    _initialYear = ExpenseHelper.getInitialYear();
+    _currentMonth = ExpenseHelper.getInitialMonth();
+    _currentYear = ExpenseHelper.getInitialYear();
+
     _pageController = PageController(
       initialPage: 0,
     );

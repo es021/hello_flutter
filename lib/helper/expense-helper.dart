@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:hello_flutter/helper/time-helper.dart';
 
 class _ExpenseHelper {
   final category_rent = "rent";
   final category_loan = "loan";
   final category_utility = "utility";
   final category_insurance = "insurance";
+  final category_health = "health";
   final category_baby_necessity = "baby_necessity";
   final category_transportation = "transportation";
   final category_saving = "saving";
@@ -14,12 +16,32 @@ class _ExpenseHelper {
   final category_vacation = "vacation";
   final category_entertainment = "entertainment";
 
+  getInitialMonth() {
+    int d = TimeHelper.currentDay();
+    int m = TimeHelper.currentMonth();
+    if (d >= 25) {
+      m++;
+    }
+    return m;
+  }
+
+  getInitialYear() {
+    int d = TimeHelper.currentDay();
+    int m = TimeHelper.currentMonth();
+    int y = TimeHelper.currentYear();
+    if (d >= 25 && m == 12) {
+      y++;
+    }
+    return y;
+  }
+
   getAllCategory() {
     return <String>[
       category_rent,
       category_loan,
       category_utility,
       category_insurance,
+      category_health,
       category_transportation,
       category_saving,
       category_gift,
@@ -71,6 +93,13 @@ class _ExpenseHelper {
         return charts.MaterialPalette.cyan.shadeDefault;
       }
       return Colors.cyan[900];
+    }
+
+    if (cat == this.category_health) {
+      if (forChart) {
+        return charts.MaterialPalette.green.shadeDefault;
+      }
+      return Colors.green[400];
     }
 
     if (cat == this.category_baby_necessity) {
@@ -131,6 +160,9 @@ class _ExpenseHelper {
       return Icons.receipt;
     }
     if (cat == this.category_insurance) {
+      return Icons.local_hospital;
+    }
+    if (cat == this.category_health) {
       return Icons.local_hospital;
     }
     if (cat == this.category_baby_necessity) {
